@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../app/theme/app_theme.dart';
-import 'dashboard_shared_widgets.dart';
+
 
 class HandbookTab extends StatelessWidget {
   final int coins;
@@ -22,27 +22,28 @@ class HandbookTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DashboardProfileRow(coins: coins, symptomProfile: symptomProfile),
-          const SizedBox(height: 12),
-          const CriticalAlertBanner(),
-          const SizedBox(height: 12),
+
 
           // Personalized Article Feed
           // Article 1
           _buildArticleCard(
             context: context,
-            icon: '📖',
-            title: '5 Bước Vệ Sinh Mũi Xoang Đúng Cách Tại Nhà Bằng Nước Muối',
-            readTime: 'Thời gian đọc: 3 phút',
+            icon: '🌤️',
+            title: 'Cách phòng ngừa viêm xoang trong mùa nắng nóng cực hạn',
+            category: 'Thời tiết',
+            readTime: '5 phút đọc',
+            views: '👁️ 1.2k lượt đọc',
             isDark: isDark,
           ),
           const SizedBox(height: 8),
           // Article 2
           _buildArticleCard(
             context: context,
-            icon: '🍵',
-            title: 'Các Loại Trà Thảo Mộc Tự Nhiên Giúp Giảm Nghẹt Mũi Tức Thì',
-            readTime: 'Thời gian đọc: 4 phút',
+            icon: '🥗',
+            title: 'Top 5 thực phẩm kháng viêm tự nhiên cực tốt cho xoang',
+            category: 'Dinh dưỡng',
+            readTime: '4 phút đọc',
+            views: '👁️ 850 lượt đọc',
             isDark: isDark,
           ),
           const SizedBox(height: 12),
@@ -52,9 +53,10 @@ class HandbookTab extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E293B) : const Color(0xFFEBF2FF),
+              color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.brandPrimaryLight,
               border: Border.all(
-                color: isDark ? const Color(0xFF334155) : const Color(0xFFD0E1FD),
+                color: isDark ? AppColors.darkColorScheme.outline : AppColors.brandPrimary.withValues(alpha: 0.2),
+                width: 1,
               ),
               borderRadius: BorderRadius.circular(16),
             ),
@@ -63,8 +65,8 @@ class HandbookTab extends StatelessWidget {
                 Container(
                   width: 44,
                   height: 44,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
                     shape: BoxShape.circle,
                   ),
                   child: const Center(
@@ -81,20 +83,20 @@ class HandbookTab extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Cần Tư Vấn Thuốc Ngay?',
+                        'Dược sĩ Long Châu 24/7',
                         style: TextStyle(
-                          fontSize: 13,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                          color: isDark ? Colors.white : AppColors.brandPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
-                        'Kết nối ngay với dược sĩ chuyên môn Long Châu gần nhất.',
+                      Text(
+                        'Tư vấn miễn phí qua điện thoại',
                         style: TextStyle(
                           fontSize: 10,
-                          color: AppColors.textMuted,
-                          height: 1.3,
+                          fontWeight: FontWeight.normal,
+                          color: isDark ? Colors.grey.shade400 : AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -106,38 +108,35 @@ class HandbookTab extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Đang kết nối cuộc gọi đến dược sĩ Long Châu... 📞'),
-                        backgroundColor: AppColors.primaryBlue,
+                        backgroundColor: AppColors.brandPrimary,
                       ),
                     );
                   },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 36,
-                        height: 36,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppColors.primaryBlue,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.brandPrimary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.phone,
+                          color: Colors.white,
+                          size: 14,
                         ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.phone,
+                        SizedBox(width: 4),
+                        Text(
+                          'Gọi ngay',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            size: 18,
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'GỌI ĐIỆN',
-                        style: TextStyle(
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryBlue,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -152,16 +151,18 @@ class HandbookTab extends StatelessWidget {
     required BuildContext context,
     required String icon,
     required String title,
+    required String category,
     required String readTime,
+    required String views,
     required bool isDark,
   }) {
     return Card(
       elevation: 0,
-      color: isDark ? const Color(0xFF131C2E) : Colors.white,
+      color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+          color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
         ),
       ),
       child: InkWell(
@@ -169,7 +170,7 @@ class HandbookTab extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Đang mở bài viết: "$title"...'),
-              backgroundColor: AppColors.primaryBlue,
+              backgroundColor: AppColors.brandPrimary,
             ),
           );
         },
@@ -177,18 +178,19 @@ class HandbookTab extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: 56,
-                height: 56,
+                width: 90,
+                height: 90,
                 decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF4F7F6),
+                  color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.bgBase,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
                   child: Text(
                     icon,
-                    style: const TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 36),
                   ),
                 ),
               ),
@@ -197,6 +199,42 @@ class HandbookTab extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.brandPrimaryLight,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            category,
+                            style: const TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.brandPrimary,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.bgBase,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            readTime,
+                            style: TextStyle(
+                              fontSize: 8,
+                              fontWeight: FontWeight.normal,
+                              color: isDark ? Colors.grey.shade400 : AppColors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
                     Text(
                       title,
                       maxLines: 2,
@@ -204,16 +242,17 @@ class HandbookTab extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                        color: isDark ? Colors.white : AppColors.textPrimary,
                         height: 1.3,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
-                      readTime,
+                      views,
                       style: const TextStyle(
                         fontSize: 9,
-                        color: AppColors.textMuted,
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.textTertiary,
                       ),
                     ),
                   ],

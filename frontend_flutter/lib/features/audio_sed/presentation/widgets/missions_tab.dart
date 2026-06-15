@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../health_360/presentation/cubit/health_360_cubit.dart';
 import '../../../health_360/presentation/cubit/health_360_state.dart';
-import 'dashboard_shared_widgets.dart';
+
 
 class MissionsTab extends StatelessWidget {
   final Health360State state;
@@ -21,31 +21,29 @@ class MissionsTab extends StatelessWidget {
 
     // Calculate completed count
     final nwDone = state.completedTasks['morn_task_1'] == true;
-    final nfDone = state.completedTasks['noon_task_1'] == true;
-    final tcDone = state.completedTasks['night_task_1'] == true;
+    final tcDone = state.completedTasks['night_task_1'] == true; // Ghi âm
+    final nfDone = state.completedTasks['noon_task_1'] == true; // Quét ảnh
+    
     int completedCount = 0;
     if (nwDone) completedCount++;
-    if (nfDone) completedCount++;
     if (tcDone) completedCount++;
+    if (nfDone) completedCount++;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DashboardProfileRow(coins: state.coins, symptomProfile: _getSymptomProfile(state.symptoms)),
-          const SizedBox(height: 12),
-          const CriticalAlertBanner(),
-          const SizedBox(height: 12),
+
 
           // Missions Tracker Card
           Card(
             elevation: 0,
-            color: isDark ? const Color(0xFF131C2E) : Colors.white,
+            color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
               side: BorderSide(
-                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+                color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
               ),
             ),
             child: Padding(
@@ -54,18 +52,43 @@ class MissionsTab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        '🪙',
-                        style: TextStyle(fontSize: 14),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Tiến trình nhiệm vụ',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'Hoàn thành nhiệm vụ nhận Lxu',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.normal,
+                              color: isDark ? Colors.grey.shade400 : AppColors.textTertiary,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Nhiệm vụ sức khỏe hôm nay: $completedCount/3',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFE9FBF2),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          '$completedCount/3 Nhiệm vụ',
+                          style: const TextStyle(
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.successColor,
+                          ),
                         ),
                       ),
                     ],
@@ -76,7 +99,7 @@ class MissionsTab extends StatelessWidget {
                     width: double.infinity,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+                      color: isDark ? const Color(0xFF1E293B) : AppColors.borderColor,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     alignment: Alignment.centerLeft,
@@ -84,7 +107,7 @@ class MissionsTab extends StatelessWidget {
                       widthFactor: completedCount / 3.0,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBlue,
+                          color: AppColors.brandPrimary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -97,55 +120,55 @@ class MissionsTab extends StatelessWidget {
           const SizedBox(height: 12),
 
           // Missions List
-          // Mission 1
+          // Mission 1: Kiểm tra chỉ số độ ẩm hôm nay
           _buildMissionRow(
             context: context,
             icon: '☁️',
-            text: 'Đọc bản tin chỉ số môi trường sáng nay (+5 Lxu)',
+            title: 'Kiểm tra chỉ số độ ẩm hôm nay',
+            rewardCoins: 10,
             isCompleted: nwDone,
             onAction: () {
-              context.read<Health360Cubit>().completeTask('morn_task_1', 5);
+              context.read<Health360Cubit>().completeTask('morn_task_1', 10);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content: Text('Chúc mừng bạn đã hoàn thành nhiệm vụ và nhận +5 Lxu!'),
-                  backgroundColor: AppColors.primaryBlue,
+                  content: Text('Chúc mừng bạn đã hoàn thành nhiệm vụ và nhận +10 Lxu!'),
+                  backgroundColor: AppColors.brandPrimary,
                 ),
               );
             },
-            actionText: 'Nhận Lxu',
             isDark: isDark,
           ),
           const SizedBox(height: 8),
-          // Mission 2
-          _buildMissionRow(
-            context: context,
-            icon: '📸',
-            text: 'Quét ảnh món ăn trưa chống viêm xoang (+10 Lxu)',
-            isCompleted: nfDone,
-            onAction: () => context.push('/food-checker'),
-            actionText: 'Làm ngay',
-            isDark: isDark,
-          ),
-          const SizedBox(height: 8),
-          // Mission 3
+          // Mission 2: Ghi âm và phân tích âm thanh
           _buildMissionRow(
             context: context,
             icon: '🎙️',
-            text: 'Ghi âm và phân tích âm thanh (+15 Lxu)',
+            title: 'Ghi âm và phân tích âm thanh',
+            rewardCoins: 20,
             isCompleted: tcDone,
             onAction: () => context.push('/audio-analysis'),
-            actionText: 'Làm ngay',
+            isDark: isDark,
+          ),
+          const SizedBox(height: 8),
+          // Mission 3: Quét ảnh bữa ăn chống viêm
+          _buildMissionRow(
+            context: context,
+            icon: '📸',
+            title: 'Quét ảnh bữa ăn chống viêm',
+            rewardCoins: 15,
+            isCompleted: nfDone,
+            onAction: () => context.push('/food-checker'),
             isDark: isDark,
           ),
           const SizedBox(height: 16),
 
           // Loyalty Title
-          const Text(
+          Text(
             'ĐỔI QUÀ LOYALTY',
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.bold,
-              color: AppColors.textMuted,
+              color: isDark ? Colors.grey.shade300 : AppColors.textSecondary,
               letterSpacing: 0.5,
             ),
           ),
@@ -157,9 +180,10 @@ class MissionsTab extends StatelessWidget {
               Expanded(
                 child: _buildRewardCard(
                   context: context,
-                  icon: '🧴',
-                  title: 'Voucher giảm 20k xịt mũi',
-                  cost: 100,
+                  icon: '😷',
+                  title: 'Khẩu trang N95 kháng khuẩn',
+                  cost: 50,
+                  stockStatus: 'Còn 5',
                   isDark: isDark,
                 ),
               ),
@@ -167,9 +191,10 @@ class MissionsTab extends StatelessWidget {
               Expanded(
                 child: _buildRewardCard(
                   context: context,
-                  icon: '😷',
-                  title: 'Voucher FreeShip đơn thuốc',
-                  cost: 200,
+                  icon: '🧴',
+                  title: 'Xịt mũi nước biển sâu Xisat',
+                  cost: 120,
+                  hotStatus: 'Bán chảy',
                   isDark: isDark,
                 ),
               ),
@@ -183,19 +208,19 @@ class MissionsTab extends StatelessWidget {
   Widget _buildMissionRow({
     required BuildContext context,
     required String icon,
-    required String text,
+    required String title,
+    required int rewardCoins,
     required bool isCompleted,
     required VoidCallback onAction,
-    required String actionText,
     required bool isDark,
   }) {
     return Card(
       elevation: 0,
-      color: isDark ? const Color(0xFF131C2E) : Colors.white,
+      color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+          color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
         ),
       ),
       child: Padding(
@@ -208,47 +233,74 @@ class MissionsTab extends StatelessWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? Colors.white : AppColors.primaryBlueDark,
-                  height: 1.3,
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
+                      height: 1.3,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF3E6),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '💎 +$rewardCoins Lxu',
+                      style: const TextStyle(
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.warningColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(width: 8),
             isCompleted
                 ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
-                      borderRadius: BorderRadius.circular(16),
+                      color: const Color(0xFFE9FBF2),
+                      borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
-                      'Đã nhận',
+                      'Hoàn thành',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 9,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF9CA3AF),
+                        color: AppColors.successColor,
                       ),
                     ),
                   )
-                : OutlinedButton(
+                : ElevatedButton(
                     onPressed: onAction,
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primaryBlue,
-                      side: const BorderSide(color: AppColors.primaryBlue),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.brandPrimary,
+                      foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Text(
-                      actionText,
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                    child: const Text(
+                      'Thực hiện',
+                      style: TextStyle(
+                        fontSize: 9, 
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
           ],
@@ -263,14 +315,16 @@ class MissionsTab extends StatelessWidget {
     required String title,
     required int cost,
     required bool isDark,
+    String? stockStatus,
+    String? hotStatus,
   }) {
     return Card(
       elevation: 0,
-      color: isDark ? const Color(0xFF131C2E) : Colors.white,
+      color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+          color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
         ),
       ),
       child: Padding(
@@ -282,7 +336,7 @@ class MissionsTab extends StatelessWidget {
               height: 72,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF4F7F6),
+                color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.bgBase,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
@@ -302,19 +356,59 @@ class MissionsTab extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                  color: isDark ? Colors.white : AppColors.textPrimary,
                   height: 1.3,
                 ),
               ),
             ),
-            const SizedBox(height: 4),
-            Text(
-              '$cost Lxu',
-              style: const TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFF39C12),
-              ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.brandPrimaryLight,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '$cost Lxu',
+                    style: const TextStyle(
+                      fontSize: 8,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.brandPrimary,
+                    ),
+                  ),
+                ),
+                if (stockStatus != null) ...[
+                  const SizedBox(width: 6),
+                  Text(
+                    stockStatus,
+                    style: const TextStyle(
+                      fontSize: 8,
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.textTertiary,
+                    ),
+                  ),
+                ],
+                if (hotStatus != null) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFDE7E8),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      hotStatus,
+                      style: const TextStyle(
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.errorColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
             const SizedBox(height: 8),
             SizedBox(
@@ -322,8 +416,10 @@ class MissionsTab extends StatelessWidget {
               height: 28,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryBlue,
+                  backgroundColor: AppColors.brandPrimary,
+                  foregroundColor: Colors.white,
                   padding: EdgeInsets.zero,
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -333,7 +429,7 @@ class MissionsTab extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Số dư Lxu của bạn không đủ!'),
-                        backgroundColor: Colors.red,
+                        backgroundColor: AppColors.errorColor,
                       ),
                     );
                     return;
@@ -343,7 +439,7 @@ class MissionsTab extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Đổi quà thành công: $title!'),
-                        backgroundColor: const Color(0xFF2ECC71),
+                        backgroundColor: AppColors.successColor,
                       ),
                     );
                   }
@@ -364,19 +460,4 @@ class MissionsTab extends StatelessWidget {
     );
   }
 
-  String _getSymptomProfile(Map<String, bool> symptoms) {
-    final nw = symptoms['nose_weather'] ?? false;
-    final nf = symptoms['nose_food'] ?? false;
-    final tc = symptoms['throat_cough'] ?? false;
-    final ts = symptoms['throat_snore'] ?? false;
-
-    if (nw && nf && tc && ts) return 'Hồ sơ: SÀNG LỌC TMH';
-    if (nw && tc && ts) return 'Hồ sơ: XOANG & HO NGÁY';
-    if (nw && ts) return 'Hồ sơ: XOANG & NGỦ NGÁY';
-    if (nw && tc) return 'Hồ sơ: XOANG & HO KHAN';
-    if (nw) return 'Hồ sơ: Xoang Mãn Tính';
-    if (tc || ts) return 'Hồ sơ: HO KHAN / NGÁY ĐÊM';
-    if (nf) return 'Hồ sơ: KÍCH ỨNG THỨC ĂN';
-    return 'Hồ sơ: CHƯA XÁC ĐỊNH';
-  }
 }

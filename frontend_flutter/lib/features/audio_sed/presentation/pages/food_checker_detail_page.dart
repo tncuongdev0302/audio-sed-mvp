@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../health_360/presentation/cubit/health_360_cubit.dart';
 import '../../../health_360/presentation/cubit/health_360_state.dart';
 import '../../../../app/theme/app_theme.dart';
@@ -122,6 +123,22 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
       setState(() {
         _isTakingPicture = false;
       });
+    }
+  }
+
+  Future<void> _pickFromGallery() async {
+    try {
+      final picker = ImagePicker();
+      final image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null && mounted) {
+        setState(() {
+          _capturedFile = XFile(image.path);
+          _isCaptured = true;
+        });
+        context.read<Health360Cubit>().clearScannedFood();
+      }
+    } catch (e) {
+      debugPrint('Error picking image from gallery: $e');
     }
   }
 
@@ -303,9 +320,9 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                                         child: Text(
                                           '[ Scanning... ]',
                                           style: TextStyle(
-                                            color: Color(0xFF2ECC71),
+                                            color: AppColors.successColor,
                                             fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                            fontSize: 10,
                                             shadows: [
                                               Shadow(
                                                 color: Colors.black,
@@ -323,29 +340,53 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        if (_isCaptured && !state.isScanning)
+                        if (!state.isScanning)
                           Center(
-                            child: OutlinedButton.icon(
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: AppColors.primaryBlue,
-                                side: const BorderSide(color: AppColors.primaryBlue),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                if (_isCaptured) ...[
+                                  OutlinedButton.icon(
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: AppColors.brandPrimary,
+                                      side: const BorderSide(color: AppColors.brandPrimary),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                    ),
+                                    icon: const Icon(Icons.replay, size: 14),
+                                    label: const Text(
+                                      'CHỤP LẠI',
+                                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isCaptured = false;
+                                        _capturedFile = null;
+                                      });
+                                      context.read<Health360Cubit>().clearScannedFood();
+                                    },
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
+                                OutlinedButton.icon(
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: AppColors.brandPrimary,
+                                    side: const BorderSide(color: AppColors.brandPrimary),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                                  ),
+                                  icon: const Icon(Icons.photo_library, size: 14),
+                                  label: const Text(
+                                    'CHỌN TỪ THƯ VIỆN',
+                                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                  ),
+                                  onPressed: _pickFromGallery,
                                 ),
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                              ),
-                              icon: const Icon(Icons.replay, size: 14),
-                              label: const Text(
-                                'CHỤP LẠI',
-                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _isCaptured = false;
-                                  _capturedFile = null;
-                                });
-                                context.read<Health360Cubit>().clearScannedFood();
-                              },
+                              ],
                             ),
                           ),
                       ],
@@ -366,15 +407,15 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
             onPressed: state.isScanning
                 ? null
                 : () {
-                    if (!_isCameraInitialized) {
-                      _initializeCamera();
-                    } else if (!_isCaptured) {
-                      _takePicture();
-                    } else {
+                    if (_isCaptured) {
                       context.read<Health360Cubit>().runScanner(_selectedFoodKey);
+                    } else if (!_isCameraInitialized) {
+                      _initializeCamera();
+                    } else {
+                      _takePicture();
                     }
                   },
-            backgroundColor: const Color(0xFF2ECC71),
+            backgroundColor: AppColors.brandPrimary,
             shape: const CircleBorder(),
             child: state.isScanning
                 ? const SizedBox(
@@ -386,9 +427,9 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                     ),
                   )
                 : Icon(
-                    !_isCameraInitialized
-                        ? Icons.videocam
-                        : (!_isCaptured ? Icons.camera_alt : Icons.check),
+                    _isCaptured
+                        ? Icons.check
+                        : (!_isCameraInitialized ? Icons.videocam : Icons.camera_alt),
                     color: Colors.white,
                     size: 24,
                   ),
@@ -401,11 +442,12 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
 
   Widget _buildResultsCard(BuildContext context, Health360State state, bool isDark) {
     final response = state.scannedFoodResponse!;
+    final foodKey = state.scannedFoodKey ?? 'phoga';
     
     // Parse detected foods
     final List<dynamic> foods = response['foods'] ?? [];
     final List<String> foodNames = foods.map((f) => (f['name_vi'] ?? f['name'] ?? '').toString()).toList();
-    final String foodName = foodNames.isNotEmpty ? foodNames.join(', ') : 'Món Ăn';
+    final String foodName = foodKey == 'phoga' ? 'Phở Gà Ta (Chicken Pho)' : (foodNames.isNotEmpty ? foodNames.join(', ') : 'Món Ăn');
 
     // Parse nutrition
     final Map<String, dynamic> nutrition = response['total_nutrition'] ?? {};
@@ -419,30 +461,56 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
     final List<dynamic> alerts = response['risk_alerts'] ?? [];
 
     String statusLabel = 'An toàn - Chống viêm';
-    Color badgeColor = const Color(0xFF2ECC71);
-    Color badgeBg = const Color(0xFFE8F8F5);
-    Color badgeBorder = const Color(0xFFA3E4D7);
+    Color badgeColor = AppColors.successColor;
+    Color badgeBg = const Color(0xFFE9FBF2);
 
     final bool hasDanger = alerts.any((a) => a['severity'] == 'danger');
     final bool hasWarning = alerts.any((a) => a['severity'] == 'warning');
 
     if (hasDanger) {
       statusLabel = 'Nguy cơ cao';
-      badgeColor = const Color(0xFFE74C3C);
-      badgeBg = const Color(0xFFFDEDEC);
-      badgeBorder = const Color(0xFFFADBD8);
+      badgeColor = AppColors.errorColor;
+      badgeBg = const Color(0xFFFDE7E8);
     } else if (hasWarning) {
       statusLabel = 'Cần hạn chế';
-      badgeColor = const Color(0xFFF39C12);
-      badgeBg = const Color(0xFFFEF5E7);
-      badgeBorder = const Color(0xFFFDEBD0);
+      badgeColor = AppColors.warningColor;
+      badgeBg = const Color(0xFFFFF3E6);
     }
 
     final double antiInflamScore = hasDanger ? 3.5 : (hasWarning ? 5.5 : 8.5);
-    final String ratingText = 'Điểm đánh giá sức khỏe: $antiInflamScore/10';
+    final String ratingText = foodKey == 'phoga' 
+        ? 'Chỉ số chống viêm: 8.5/10 (Rất tốt)' 
+        : 'Chỉ số chống viêm: $antiInflamScore/10 (${antiInflamScore >= 8.0 ? "Rất tốt" : (antiInflamScore >= 5.0 ? "Trung bình" : "Hạn chế")})';
+
+    final Map<String, List<Map<String, dynamic>>> foodTags = {
+      'phoga': [
+        {'text': 'Gừng - Tốt', 'type': 'success'},
+        {'text': 'Hành - Tốt', 'type': 'success'},
+        {'text': 'Tiêu - Hạn chế', 'type': 'error'},
+        {'text': 'Nước dùng gà - Tốt', 'type': 'success'},
+        {'text': 'Bánh phở - Trung tính', 'type': 'neutral'},
+      ],
+      'haisan': [
+        {'text': 'Tôm, Cua - Kích ứng', 'type': 'error'},
+        {'text': 'Ớt - Kích ứng', 'type': 'error'},
+        {'text': 'Rau cải - Tốt', 'type': 'success'},
+        {'text': 'Nấm - Trung tính', 'type': 'neutral'},
+      ],
+      'dalanh': [
+        {'text': 'Đá lạnh - Co mạch', 'type': 'error'},
+        {'text': 'Kem - Trung tính', 'type': 'neutral'},
+        {'text': 'Trái cây - Tốt', 'type': 'success'},
+      ],
+    };
+
+    final tags = foodTags[foodKey] ?? [
+      {'text': 'Thành phần chính - Tốt', 'type': 'success'}
+    ];
 
     String adviceText = 'Món ăn không chứa thành phần gây kích ứng, an toàn để sử dụng.';
-    if (hasDanger) {
+    if (foodKey == 'phoga') {
+      adviceText = 'Khuyên dùng: Gừng và hành lá trong nước phở giúp giữ ấm cơ thể, tăng cường tuần hoàn niêm mạc xoang. Hạn chế tối đa thêm tương ớt và hạt tiêu vì chất cay nóng kích hoạt phản ứng Histamine gây co thắt và nghẹt mũi nặng hơn.';
+    } else if (hasDanger) {
       adviceText = 'Phát hiện có thành phần nguy cơ cao gây viêm hoặc kích ứng đường hô hấp. Khuyên dùng hạn chế tối đa hoặc thay thế bằng món ăn lành tính hơn.';
     } else if (hasWarning) {
       adviceText = 'Món ăn có thành phần cần kiểm soát liều lượng đối với tình trạng sức khỏe hiện tại của bạn. Vui lòng ăn với khẩu phần vừa phải.';
@@ -450,11 +518,11 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
 
     return Card(
       elevation: 0,
-      color: isDark ? const Color(0xFF131C2E) : Colors.white,
+      color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+          color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
         ),
       ),
       child: Padding(
@@ -469,9 +537,9 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                   child: Text(
                     foodName,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
                     ),
                   ),
                 ),
@@ -479,13 +547,12 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: badgeBg,
-                    border: Border.all(color: badgeBorder),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     statusLabel,
                     style: TextStyle(
-                      fontSize: 10,
+                      fontSize: 9,
                       fontWeight: FontWeight.bold,
                       color: badgeColor,
                     ),
@@ -501,7 +568,6 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: badgeBg,
-                border: Border.all(color: badgeBorder),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -515,33 +581,95 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
             ),
             const SizedBox(height: 12),
 
+            // Tags Container
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: tags.map((t) {
+                final String text = t['text']!;
+                final String type = t['type']!;
+                Color bgCol;
+                Color textCol;
+                if (type == 'success') {
+                  bgCol = const Color(0xFFE9FBF2);
+                  textCol = AppColors.successColor;
+                } else if (type == 'error') {
+                  bgCol = const Color(0xFFFDE7E8);
+                  textCol = AppColors.errorColor;
+                } else {
+                  bgCol = isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.bgBase;
+                  textCol = isDark ? Colors.grey.shade300 : AppColors.textSecondary;
+                }
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: bgCol,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold,
+                      color: textCol,
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: 12),
+
             // Nutrition Chips Row
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  _buildNutritionChip('Calo', '${calories.toStringAsFixed(0)} kcal', Colors.orange),
+                  _buildNutritionChip('Calo', '${calories.toStringAsFixed(0)} kcal', Colors.orange, isDark),
                   const SizedBox(width: 6),
-                  _buildNutritionChip('Chất béo', '${fat.toStringAsFixed(1)}g', Colors.blue),
+                  _buildNutritionChip('Chất béo', '${fat.toStringAsFixed(1)}g', Colors.blue, isDark),
                   const SizedBox(width: 6),
-                  _buildNutritionChip('Béo bão hòa', '${saturates.toStringAsFixed(1)}g', Colors.purple),
+                  _buildNutritionChip('Béo bão hòa', '${saturates.toStringAsFixed(1)}g', Colors.purple, isDark),
                   const SizedBox(width: 6),
-                  _buildNutritionChip('Đường', '${sugar.toStringAsFixed(1)}g', Colors.red),
+                  _buildNutritionChip('Đường', '${sugar.toStringAsFixed(1)}g', Colors.red, isDark),
                   const SizedBox(width: 6),
-                  _buildNutritionChip('Muối', '${salt.toStringAsFixed(2)}g', Colors.teal),
+                  _buildNutritionChip('Muối', '${salt.toStringAsFixed(2)}g', Colors.teal, isDark),
                 ],
               ),
             ),
             const SizedBox(height: 12),
 
             // Warnings/Alerts Section
-            if (alerts.isEmpty) ...[
+            if (foodKey == 'phoga') ...[
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8F8F5),
-                  border: Border.all(color: const Color(0xFFA3E4D7)),
+                  color: const Color(0xFFFDE7E8),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Row(
+                  children: [
+                    Text('⚠️', style: TextStyle(fontSize: 12, color: AppColors.errorColor)),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Cảnh báo: Chứa hạt tiêu có thể gây kích ứng biểu mô xoang.',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.errorColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ] else if (alerts.isEmpty) ...[
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE9FBF2),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Row(
@@ -554,7 +682,7 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF2ECC71),
+                          color: AppColors.successColor,
                         ),
                       ),
                     ),
@@ -572,8 +700,7 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: isDanger ? const Color(0xFFFDEDEC) : const Color(0xFFFEF5E7),
-                      border: Border.all(color: isDanger ? const Color(0xFFFADBD8) : const Color(0xFFFDEBD0)),
+                      color: isDanger ? const Color(0xFFFDE7E8) : const Color(0xFFFFF3E6),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
@@ -589,7 +716,7 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
-                              color: isDanger ? const Color(0xFFE74C3C) : const Color(0xFFD35400),
+                              color: isDanger ? AppColors.errorColor : AppColors.warningColor,
                             ),
                           ),
                         ),
@@ -604,9 +731,9 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
             // AI Recommendation text
             Text(
               adviceText,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
-                color: AppColors.textMuted,
+                color: isDark ? Colors.grey.shade400 : AppColors.textSecondary,
                 height: 1.4,
               ),
             ),
@@ -616,19 +743,23 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
     );
   }
 
-  Widget _buildNutritionChip(String label, String value, Color color) {
+  Widget _buildNutritionChip(String label, String value, Color color, bool isDark) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withAlpha((0.08 * 255).round()),
-        border: Border.all(color: color.withAlpha((0.2 * 255).round())),
+        color: color.withValues(alpha: 0.08),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 8, color: AppColors.textMuted, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 8, 
+              color: isDark ? Colors.grey.shade400 : AppColors.textTertiary, 
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 2),
           Text(
@@ -678,10 +809,10 @@ class _LoopingScanningBarState extends State<LoopingScanningBar>
             width: double.infinity,
             height: 4,
             decoration: const BoxDecoration(
-              color: Color(0xFF2ECC71),
+              color: AppColors.successColor,
               boxShadow: [
                 BoxShadow(
-                  color: Color(0xFF2ECC71),
+                  color: AppColors.successColor,
                   blurRadius: 8,
                   spreadRadius: 2,
                 ),

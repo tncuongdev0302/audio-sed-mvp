@@ -64,7 +64,7 @@ class WeeklySummaryPage extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF10B981),
+                            color: AppColors.successColor,
                           ),
                         ),
                       ],
@@ -112,9 +112,9 @@ class WeeklySummaryPage extends StatelessWidget {
                         context: context,
                         title: 'CƠN HO KHAN',
                         before: coughBefore,
-                        beforeColor: const Color(0xFFEF4444),
+                        beforeColor: AppColors.errorColor,
                         after: coughAfter,
-                        afterColor: const Color(0xFF10B981),
+                        afterColor: AppColors.successColor,
                       ),
                       const SizedBox(height: 12),
 
@@ -123,9 +123,9 @@ class WeeklySummaryPage extends StatelessWidget {
                         context: context,
                         title: 'TIẾNG THỞ NGÁY',
                         before: snoreBefore,
-                        beforeColor: const Color(0xFFFB923C),
+                        beforeColor: AppColors.warningColor,
                         after: snoreAfter,
-                        afterColor: const Color(0xFF10B981),
+                        afterColor: AppColors.successColor,
                       ),
                     ],
                   ),
@@ -179,7 +179,7 @@ class WeeklySummaryPage extends StatelessWidget {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Đã nhận +450 L-Point thưởng tuần! 🌟'),
-                                      backgroundColor: Color(0xFF10B981),
+                                      backgroundColor: AppColors.successColor,
                                     ),
                                   );
                                 },

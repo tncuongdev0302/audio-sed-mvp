@@ -66,8 +66,10 @@ class Health360Cubit extends Cubit<Health360State> {
       }
 
       return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: const Duration(seconds: 5),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 5),
+        ),
       );
     } catch (_) {
       return null;
@@ -110,10 +112,16 @@ class Health360Cubit extends Cubit<Health360State> {
 
       // 2. Fetch aggregated user context
       final contextResult = await _getContextWeather(userId);
-      final weatherData = contextResult.fold(
+      final contextData = contextResult.fold(
         (failure) => throw Exception(failure.message),
-        (data) => data['weather'] as Map<String, dynamic>,
+        (data) => data,
       );
+
+      final weatherData = Map<String, dynamic>.from(contextData['weather'] as Map? ?? {});
+      weatherData['sinus_score'] = contextData['sinus_score'];
+      weatherData['sinus_status'] = contextData['sinus_status'];
+      weatherData['sinus_description'] = contextData['sinus_description'];
+      weatherData['ai_advice'] = contextData['ai_advice'];
 
       // Track onboarding sync analytics event
       await _trackEvent(
@@ -127,6 +135,7 @@ class Health360Cubit extends Cubit<Health360State> {
       emit(state.copyWith(
         userId: userId,
         weatherData: weatherData,
+        userContext: contextData,
         isOnboardingLoading: false,
         isSurveyCompleted: true,
         timeOfDay: 'morning',
@@ -431,6 +440,10 @@ class Health360Cubit extends Cubit<Health360State> {
       weeklySummary: null,
       errorMsg: null,
     ));
+  }
+
+  void clearError() {
+    emit(state.copyWith(clearError: true));
   }
 
   @override

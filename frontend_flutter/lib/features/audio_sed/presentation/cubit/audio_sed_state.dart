@@ -20,10 +20,12 @@ final class AudioSedAnalyzing extends AudioSedState {
 final class AudioSedAnalysisSuccess extends AudioSedState {
   final AnalysisResult result;
   final String mode;
+  final String? recordingPath;
 
   const AudioSedAnalysisSuccess({
     required this.result,
     required this.mode,
+    this.recordingPath,
   });
 }
 

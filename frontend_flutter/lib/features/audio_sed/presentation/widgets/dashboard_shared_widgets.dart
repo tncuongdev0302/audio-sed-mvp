@@ -24,14 +24,17 @@ class DashboardProfileRow extends StatelessWidget {
             Container(
               width: 36,
               height: 36,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Color(0xFFE5E7EB),
+                color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.brandPrimaryLight,
               ),
               child: const Center(
                 child: Text(
                   '👤',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColors.brandPrimary,
+                  ),
                 ),
               ),
             ),
@@ -45,7 +48,7 @@ class DashboardProfileRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                    color: isDark ? Colors.white : AppColors.textPrimary,
                   ),
                 ),
                 Text(
@@ -53,7 +56,7 @@ class DashboardProfileRow extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFFF39C12),
+                    color: AppColors.warningColor,
                   ),
                 ),
               ],
@@ -63,7 +66,7 @@ class DashboardProfileRow extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: const Color(0xFFEBF2FF),
+            color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.brandPrimaryLight,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
@@ -71,7 +74,7 @@ class DashboardProfileRow extends StatelessWidget {
             style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.bold,
-              color: AppColors.primaryBlue,
+              color: AppColors.brandPrimary,
             ),
           ),
         ),
@@ -89,8 +92,8 @@ class CriticalAlertBanner extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: const Color(0xFFFDEDEC),
-        border: Border.all(color: const Color(0xFFFADBD8)),
+        color: const Color(0xFFFDE7E8),
+        border: Border.all(color: AppColors.errorColor, width: 1.5),
         borderRadius: BorderRadius.circular(8),
       ),
       child: const Row(
@@ -98,7 +101,7 @@ class CriticalAlertBanner extends StatelessWidget {
         children: [
           Text(
             '⚠️',
-            style: TextStyle(fontSize: 14, color: Color(0xFFE74C3C)),
+            style: TextStyle(fontSize: 14, color: AppColors.errorColor),
           ),
           SizedBox(width: 8),
           Expanded(
@@ -107,7 +110,7 @@ class CriticalAlertBanner extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
-                color: Color(0xFFE74C3C),
+                color: AppColors.errorColor,
                 height: 1.3,
               ),
             ),

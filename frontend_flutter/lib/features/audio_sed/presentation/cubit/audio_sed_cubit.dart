@@ -76,6 +76,7 @@ class AudioSedCubit extends Cubit<AudioSedState> {
           (analysisResult) => emit(AudioSedAnalysisSuccess(
             result: analysisResult,
             mode: mode,
+            recordingPath: path,
           )),
         );
       } else {

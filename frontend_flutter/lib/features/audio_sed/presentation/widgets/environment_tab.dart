@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../app/theme/app_theme.dart';
 import '../../../health_360/presentation/cubit/health_360_cubit.dart';
 import '../../../health_360/presentation/cubit/health_360_state.dart';
-import 'dashboard_shared_widgets.dart';
+
 
 class EnvironmentTab extends StatelessWidget {
   final int coins;
@@ -24,30 +24,102 @@ class EnvironmentTab extends StatelessWidget {
     return BlocBuilder<Health360Cubit, Health360State>(
       builder: (context, state) {
         final weatherData = state.weatherData;
-        final temperature = (weatherData?['temperature'] as num?)?.round() ?? 28;
-        final humidity = (weatherData?['humidity'] as num?)?.round() ?? 45;
-        final pm25 = (weatherData?['pm25'] as num?)?.round() ?? 160;
-        final locationName = weatherData?['location_name'] ?? 'TP. Hồ Chí Minh';
-        final windSpeed = (weatherData?['wind_speed'] as num?)?.toDouble() ?? 3.0;
+
+        if (weatherData == null) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('⚠️', style: TextStyle(fontSize: 40)),
+                  const SizedBox(height: 12),
+                  Text(
+                    state.errorMsg ?? 'Không có thông tin thời tiết & sức khỏe xoang từ API. Vui lòng kiểm tra kết nối.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.grey.shade400 : AppColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
+        final temperature = (weatherData['temperature'] as num?)?.round() ?? 28;
+        final humidity = (weatherData['humidity'] as num?)?.round() ?? 45;
+        final pm25 = (weatherData['pm25'] as num?)?.round() ?? 160;
+        final locationName = weatherData['location_name'] ?? 'TP. Hồ Chí Minh';
+        final windSpeed = (weatherData['wind_speed'] as num?)?.toDouble() ?? 3.0;
+
+        final sinusScore = weatherData['sinus_score'] as int? ?? 0;
+        final sinusStatus = weatherData['sinus_status'] as String? ?? 'Chưa cập nhật';
+        final sinusDescription = weatherData['sinus_description'] as String? ?? 'Không có thông tin';
+        final aiAdvice = weatherData['ai_advice'] as String? ?? 'Không có thông tin gợi ý';
+
+        Color statusColor = AppColors.successColor;
+        if (sinusScore < 60) {
+          statusColor = AppColors.errorColor;
+        } else if (sinusScore < 80) {
+          statusColor = AppColors.warningColor;
+        }
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DashboardProfileRow(coins: coins, symptomProfile: symptomProfile),
-              const SizedBox(height: 12),
-              const CriticalAlertBanner(),
+
+
+              // AI Action Advice Banner
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF142A22) : const Color(0xFFE9FBF2),
+                  border: Border.all(
+                    color: isDark ? const Color(0xFF1A5F44) : AppColors.successColor.withValues(alpha: 0.3),
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '💡 GỢI Ý ĐẶC BIỆT TỪ TRỢ LÝ AICARE',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.successColor,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      aiAdvice,
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.normal,
+                        color: isDark ? Colors.white70 : AppColors.textPrimary,
+                        height: 1.4,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 12),
               
               // Sinus Health Score Ring Card
               Card(
                 elevation: 0,
-                color: isDark ? const Color(0xFF131C2E) : Colors.white,
+                color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                   side: BorderSide(
-                    color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+                    color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
                   ),
                 ),
                 child: Padding(
@@ -60,11 +132,11 @@ class EnvironmentTab extends StatelessWidget {
                           CustomPaint(
                             size: const Size(64, 64),
                             painter: ScoreRingPainter(
-                              score: 0.85,
-                              color: const Color(0xFF2ECC71),
-                              trackColor: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+                              score: sinusScore / 100.0,
+                              color: statusColor,
+                              trackColor: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
                             ),
-                            child: const SizedBox(
+                            child: SizedBox(
                               width: 64,
                               height: 64,
                               child: Center(
@@ -72,19 +144,19 @@ class EnvironmentTab extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      '85%',
+                                      sinusScore > 0 ? '$sinusScore%' : '--%',
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        color: AppColors.primaryBlueDark,
+                                        color: isDark ? Colors.white : AppColors.textPrimary,
                                       ),
                                     ),
                                     Text(
-                                      'TỐT',
+                                      sinusStatus,
                                       style: TextStyle(
                                         fontSize: 8,
                                         fontWeight: FontWeight.bold,
-                                        color: Color(0xFF2ECC71),
+                                        color: statusColor,
                                       ),
                                     ),
                                   ],
@@ -100,12 +172,12 @@ class EnvironmentTab extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(width: 16),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Dựa trên hồ sơ bệnh lý của bạn, các chỉ số ngoại cảnh hôm nay rất lý tưởng. Nguy cơ tái phát đợt cấp ở mức thấp.',
+                          sinusDescription,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColors.textMuted,
+                            color: isDark ? Colors.grey.shade300 : AppColors.textSecondary,
                             height: 1.3,
                           ),
                         ),
@@ -122,7 +194,7 @@ class EnvironmentTab extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+                    color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
                     width: 1,
                   ),
                   gradient: isDark
@@ -138,7 +210,7 @@ class EnvironmentTab extends StatelessWidget {
                         ),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF0C1A30).withOpacity(0.05),
+                      color: const Color(0xFF0C1A30).withValues(alpha: 0.05),
                       offset: const Offset(0, 4),
                       blurRadius: 12,
                     ),
@@ -158,31 +230,31 @@ class EnvironmentTab extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? Colors.white : const Color(0xFF1E293B),
+                              color: isDark ? Colors.white : AppColors.textSecondary,
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: pm25 > 150
-                                  ? const Color(0xFFFEE2E2)
+                                  ? const Color(0xFFFDE7E8)
                                   : (pm25 > 50
-                                      ? const Color(0xFFFEF3C7)
-                                      : const Color(0xFFD1FAE5)),
+                                      ? const Color(0xFFFFF3E6)
+                                      : const Color(0xFFE9FBF2)),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               pm25 > 150
                                   ? '⚠️ Kích ứng xoang cao'
-                                  : (pm25 > 50 ? 'Chất lượng trung bình' : 'An toàn'),
+                                  : (pm25 > 50 ? 'Chất lượng trung bình' : 'An sau'),
                               style: TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                                 color: pm25 > 150
-                                    ? const Color(0xFFEF4444)
+                                    ? AppColors.errorColor
                                     : (pm25 > 50
-                                        ? const Color(0xFFD97706)
-                                        : const Color(0xFF10B981)),
+                                        ? AppColors.warningColor
+                                        : AppColors.successColor),
                               ),
                             ),
                           ),
@@ -195,7 +267,7 @@ class EnvironmentTab extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : AppColors.primaryBlue,
+                          color: isDark ? Colors.white : AppColors.brandPrimary,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -236,37 +308,42 @@ class EnvironmentTab extends StatelessWidget {
                         children: [
                           Expanded(
                             child: _buildMetricCol(
-                              'Độ ẩm',
-                              '$humidity%',
-                              humidity > 70 || humidity < 50 ? 'Hanh khô' : 'Dễ chịu',
-                              isDark ? const Color(0xFF2C2417) : const Color(0xFFFFFBEB),
-                              isDark ? const Color(0xFF6B450C) : const Color(0xFFFDE68A),
-                              isDark ? const Color(0xFFF59E0B) : const Color(0xFFB45309),
-                              Icons.water_drop_outlined,
+                              label: 'Độ ẩm',
+                              value: '$humidity%',
+                              badgeText: humidity > 70 || humidity < 50 ? 'Hanh khô' : 'Dễ chịu',
+                              bg: isDark ? const Color(0xFF2C2417) : const Color(0xFFFFFBEB),
+                              badgeBg: isDark ? const Color(0xFF452B0C) : const Color(0xFFFFF3E6),
+                              badgeTextCol: AppColors.warningColor,
+                              icon: Icons.water_drop_outlined,
+                              isDark: isDark,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: _buildMetricCol(
-                              'Gió',
-                              '$windSpeed m/s',
-                              'Gió nhẹ',
-                              isDark ? const Color(0xFF142D24) : const Color(0xFFECFDF5),
-                              isDark ? const Color(0xFF1A5F44) : const Color(0xFFA7F3D0),
-                              isDark ? const Color(0xFF10B981) : const Color(0xFF047857),
-                              Icons.air,
+                              label: 'Gió',
+                              value: '$windSpeed m/s',
+                              badgeText: 'Dịu nhẹ',
+                              bg: isDark ? const Color(0xFF142D24) : const Color(0xFFECFDF5),
+                              badgeBg: isDark ? const Color(0xFF1B4D3E) : const Color(0xFFE9FBF2),
+                              badgeTextCol: AppColors.successColor,
+                              icon: Icons.air,
+                              isDark: isDark,
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: _buildMetricCol(
-                              'PM2.5',
-                              '$pm25',
-                              pm25 > 150 ? 'Nguy hại' : (pm25 > 50 ? 'Trung bình' : 'Tốt'),
-                              isDark ? const Color(0xFF3B1E1E) : const Color(0xFFFEF2F2),
-                              isDark ? const Color(0xFF7F1D1D) : const Color(0xFFFCA5A5),
-                              isDark ? const Color(0xFFEF4444) : const Color(0xFFB91C1C),
-                              Icons.masks_outlined,
+                              label: 'PM2.5',
+                              value: '$pm25',
+                              badgeText: pm25 > 150 ? 'Nguy hại' : (pm25 > 50 ? 'Trung bình' : 'Tốt'),
+                              bg: isDark ? const Color(0xFF3B1E1E) : const Color(0xFFFEF2F2),
+                              badgeBg: pm25 > 150
+                                  ? (isDark ? const Color(0xFF5E1D1D) : const Color(0xFFFDE7E8))
+                                  : (pm25 > 50 ? const Color(0xFF452B0C) : const Color(0xFFE9FBF2)),
+                              badgeTextCol: pm25 > 150 ? AppColors.errorColor : (pm25 > 50 ? AppColors.warningColor : AppColors.successColor),
+                              icon: Icons.masks_outlined,
+                              isDark: isDark,
                             ),
                           ),
                         ],
@@ -279,7 +356,7 @@ class EnvironmentTab extends StatelessWidget {
                             'Cảm nhận: ${temperature + 4}°C',
                             style: TextStyle(
                               fontSize: 11,
-                              color: isDark ? Colors.grey.shade400 : const Color(0xFF64748B),
+                              color: isDark ? Colors.grey.shade400 : AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -288,32 +365,12 @@ class EnvironmentTab extends StatelessWidget {
                   ),
                 ),
               ),
-          const SizedBox(height: 12),
-
-          // AI Action Advice Banner
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1B2A24) : const Color(0xFFE8F8F5),
-              border: Border.all(color: isDark ? const Color(0xFF225B42) : const Color(0xFFA3E4D7)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              'AI khuyên dùng: Nên bật máy tạo độ ẩm trong phòng kín và dùng xịt mũi biển sâu trước khi ra ngoài.',
-              style: TextStyle(
-                fontSize: 11,
-                color: isDark ? const Color(0xFF52C49A) : const Color(0xFF117A65),
-                height: 1.3,
-              ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
-  },
-);
-}
+  }
 
   Widget _buildHourlyItem(String time, IconData icon, String temp, bool isActive, bool isDark) {
     return Container(
@@ -321,10 +378,10 @@ class EnvironmentTab extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: isActive
-            ? (isDark ? const Color(0xFF1E293B) : const Color(0xFFEFF6FF))
+            ? (isDark ? const Color(0xFF1E293B) : AppColors.brandPrimaryLight)
             : Colors.transparent,
         border: Border.all(
-          color: isActive ? AppColors.primaryBlue : Colors.transparent,
+          color: isActive ? AppColors.brandPrimary : Colors.transparent,
           width: 1,
         ),
         borderRadius: BorderRadius.circular(8),
@@ -335,22 +392,29 @@ class EnvironmentTab extends StatelessWidget {
             time,
             style: TextStyle(
               fontSize: 10,
-              color: isDark ? Colors.grey.shade400 : const Color(0xFF64748B),
+              fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              color: isActive
+                  ? AppColors.brandPrimary
+                  : (isDark ? Colors.grey.shade400 : AppColors.textSecondary),
             ),
           ),
           const SizedBox(height: 4),
           Icon(
             icon,
             size: 16,
-            color: isActive ? AppColors.primaryBlue : (isDark ? Colors.grey.shade300 : const Color(0xFF64748B)),
+            color: isActive
+                ? AppColors.brandPrimary
+                : (isDark ? Colors.grey.shade300 : AppColors.textTertiary),
           ),
           const SizedBox(height: 4),
           Text(
             temp,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : const Color(0xFF1E293B),
+              color: isActive
+                  ? AppColors.brandPrimary
+                  : (isDark ? Colors.white : AppColors.textPrimary),
             ),
           ),
         ],
@@ -358,12 +422,20 @@ class EnvironmentTab extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricCol(String label, String value, String status, Color bg, Color border, Color textCol, IconData icon) {
+  Widget _buildMetricCol({
+    required String label,
+    required String value,
+    required String badgeText,
+    required Color bg,
+    required Color badgeBg,
+    required Color badgeTextCol,
+    required IconData icon,
+    required bool isDark,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       decoration: BoxDecoration(
         color: bg,
-        border: Border.all(color: border, width: 1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -371,23 +443,42 @@ class EnvironmentTab extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 12, color: textCol),
+              Icon(icon, size: 12, color: isDark ? Colors.grey.shade300 : AppColors.textSecondary),
               const SizedBox(width: 4),
               Text(
                 label,
-                style: TextStyle(fontSize: 10, color: textCol, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontSize: 10,
+                  color: isDark ? Colors.grey.shade300 : AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: textCol),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : AppColors.textPrimary,
+            ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            status,
-            style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: textCol),
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: badgeBg,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              badgeText,
+              style: TextStyle(
+                fontSize: 8,
+                fontWeight: FontWeight.bold,
+                color: badgeTextCol,
+              ),
+            ),
           ),
         ],
       ),

@@ -266,5 +266,215 @@
       "symptoms_count": 4
     },
     "timestamp": "2026-06-13T15:46:14.750083"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "b33bf4cb-2c6c-41f8-ad00-70cbc0c4adb9",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-15T20:37:00.905306"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "b33bf4cb-2c6c-41f8-ad00-70cbc0c4adb9",
+    "metadata": {
+      "food_key": "haisan"
+    },
+    "timestamp": "2026-06-15T20:37:54.343809"
+  },
+  {
+    "event_type": "complete_habit_task",
+    "user_id": "b33bf4cb-2c6c-41f8-ad00-70cbc0c4adb9",
+    "metadata": {
+      "task_id": "night_task_1",
+      "coins_earned": 15
+    },
+    "timestamp": "2026-06-15T20:39:59.453597"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "symptoms_count": 10
+    },
+    "timestamp": "2026-06-15T20:40:30.414556"
+  },
+  {
+    "event_type": "complete_habit_task",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "task_id": "night_task_1",
+      "coins_earned": 15
+    },
+    "timestamp": "2026-06-15T20:41:12.310321"
+  },
+  {
+    "event_type": "complete_habit_task",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "task_id": "morn_task_1",
+      "coins_earned": 5
+    },
+    "timestamp": "2026-06-15T20:41:24.820888"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "food_key": "dalanh"
+    },
+    "timestamp": "2026-06-15T20:41:37.355766"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "food_key": "dalanh"
+    },
+    "timestamp": "2026-06-15T20:41:44.523504"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "food_key": "dalanh"
+    },
+    "timestamp": "2026-06-15T20:41:48.214200"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "food_key": "dalanh"
+    },
+    "timestamp": "2026-06-15T20:41:49.333689"
+  },
+  {
+    "event_type": "order_voucher_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "product_name": "Voucher 50K Xịt Mũi Sinufresh",
+      "cost": 100
+    },
+    "timestamp": "2026-06-15T20:42:01.790283"
+  },
+  {
+    "event_type": "order_voucher_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "product_name": "Voucher 50K Xịt Mũi Sinufresh",
+      "cost": 200
+    },
+    "timestamp": "2026-06-15T20:42:01.799921"
+  },
+  {
+    "event_type": "order_voucher_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "product_name": "Voucher 50K Xịt Mũi Sinufresh",
+      "cost": 100
+    },
+    "timestamp": "2026-06-15T20:42:01.839573"
+  },
+  {
+    "event_type": "order_voucher_success",
+    "user_id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "metadata": {
+      "product_name": "Voucher 50K Xịt Mũi Sinufresh",
+      "cost": 200
+    },
+    "timestamp": "2026-06-15T20:42:01.867624"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "88f3f951-e6d9-4386-bcf3-b09c45b5e6c6",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-15T20:43:35.008071"
+  },
+  {
+    "event_type": "complete_habit_task",
+    "user_id": "88f3f951-e6d9-4386-bcf3-b09c45b5e6c6",
+    "metadata": {
+      "task_id": "night_task_1",
+      "coins_earned": 20
+    },
+    "timestamp": "2026-06-15T20:45:22.520182"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "88f3f951-e6d9-4386-bcf3-b09c45b5e6c6",
+    "metadata": {
+      "food_key": "dalanh"
+    },
+    "timestamp": "2026-06-15T20:46:30.963362"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "fcd13284-78ab-4697-b58f-0c5acd410ecd",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-15T20:51:48.661691"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "e9efbe33-dcca-4f39-8d11-cb3668c3d18b",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-15T21:00:07.043817"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "e9efbe33-dcca-4f39-8d11-cb3668c3d18b",
+    "metadata": {
+      "food_key": "haisan"
+    },
+    "timestamp": "2026-06-15T21:00:38.723334"
+  },
+  {
+    "event_type": "order_voucher_success",
+    "user_id": "e9efbe33-dcca-4f39-8d11-cb3668c3d18b",
+    "metadata": {
+      "product_name": "Voucher 50K Xịt Mũi Sinufresh",
+      "cost": 120
+    },
+    "timestamp": "2026-06-15T21:01:28.822363"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "b491f2cc-d82f-4ced-b7dd-6638f5ba8fcf",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-15T21:01:38.461154"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "5d1b7f89-d680-442c-a94f-b8ccdd8e4a15",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-15T21:02:31.408629"
+  },
+  {
+    "event_type": "food_scan_success",
+    "user_id": "5d1b7f89-d680-442c-a94f-b8ccdd8e4a15",
+    "metadata": {
+      "food_key": "haisan"
+    },
+    "timestamp": "2026-06-15T21:03:10.265711"
+  },
+  {
+    "event_type": "complete_habit_task",
+    "user_id": "5d1b7f89-d680-442c-a94f-b8ccdd8e4a15",
+    "metadata": {
+      "task_id": "night_task_1",
+      "coins_earned": 20
+    },
+    "timestamp": "2026-06-15T21:03:33.704219"
   }
 ]

@@ -2,42 +2,55 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppColors {
-  // Brand Colors
-  static const Color primaryBlue = Color(0xFF1558F3);
-  static const Color primaryBlueDark = Color(0xFF003366);
-  static const Color primaryBlueLight = Color(0xFFEBF2FF);
+  // Brand Colors from design.pen variables
+  static const Color brandPrimary = Color(0xFF1250DC);
+  static const Color brandPrimaryLight = Color(0xFFE7EEFE);
+  static const Color textPrimary = Color(0xFF1B1E22);
+  static const Color textSecondary = Color(0xFF40464E);
+  static const Color textTertiary = Color(0xFF7A828F);
+  static const Color bgBase = Color(0xFFF5F6F8);
+  static const Color bgSurface = Color(0xFFFFFFFF);
+  static const Color borderColor = Color(0xFFE4E8ED);
+  static const Color successColor = Color(0xFF1FAD6C);
+  static const Color warningColor = Color(0xFFF79009);
+  static const Color errorColor = Color(0xFFF52427);
+
+  // Legacy names mapped to design.pen tokens for backward compatibility
+  static const Color primaryBlue = brandPrimary;
+  static const Color primaryBlueDark = Color(0xFF003366); // Dark navy for headers if needed
+  static const Color primaryBlueLight = brandPrimaryLight;
   static const Color navyText = Color(0xFF003366);
 
-  static const Color accentOrange = Color(0xFFF37022);
+  static const Color accentOrange = warningColor;
   static const Color accentOrangeHover = Color(0xFFD85D15);
   static const Color accentOrangeLight = Color(0xFFFFF5F0);
 
-  static const Color accentGreen = Color(0xFF00A651);
+  static const Color accentGreen = successColor;
   static const Color accentGreenLight = Color(0xFFE6FBF1);
 
-  static const Color textDark = Color(0xFF111827);
-  static const Color textMuted = Color(0xFF6B7280);
-  static const Color bgBody = Color(0xFFF4F6F9);
+  static const Color textDark = textPrimary;
+  static const Color textMuted = textTertiary;
+  static const Color bgBody = bgBase;
 
   // Light Color Scheme
   static const ColorScheme lightColorScheme = ColorScheme(
     brightness: Brightness.light,
-    primary: primaryBlue,
+    primary: brandPrimary,
     onPrimary: Colors.white,
-    primaryContainer: primaryBlueLight,
-    onPrimaryContainer: primaryBlueDark,
-    secondary: accentOrange,
+    primaryContainer: brandPrimaryLight,
+    onPrimaryContainer: textPrimary,
+    secondary: warningColor,
     onSecondary: Colors.white,
-    secondaryContainer: accentOrangeLight,
-    onSecondaryContainer: accentOrangeHover,
-    tertiary: accentGreen,
+    secondaryContainer: Color(0xFFFFF5F0),
+    onSecondaryContainer: warningColor,
+    tertiary: successColor,
     onTertiary: Colors.white,
-    error: Color(0xFFEF4444),
+    error: errorColor,
     onError: Colors.white,
-    surface: Colors.white,
-    onSurface: textDark,
-    onSurfaceVariant: textMuted,
-    outline: Color(0xFFE5E7EB),
+    surface: bgSurface,
+    onSurface: textPrimary,
+    onSurfaceVariant: textSecondary,
+    outline: borderColor,
     shadow: Color(0x0F02509B),
   );
 
@@ -54,7 +67,7 @@ class AppColors {
     onSecondaryContainer: Color(0xFFFFF5F0),
     tertiary: Color(0xFF10B981), // Teal
     onTertiary: Color(0xFF090D16),
-    error: Color(0xFFEF4444),
+    error: errorColor,
     onError: Colors.white,
     surface: Color(0xFF131C2E), // Premium Card
     onSurface: Color(0xFFF8FAFC),

@@ -19,6 +19,7 @@ class Health360State extends Equatable {
   // New API Fields
   final String? userId;
   final Map<String, dynamic>? weatherData;
+  final Map<String, dynamic>? userContext;
   final Map<String, dynamic>? lastOrderResponse;
   final Map<String, dynamic>? scannedFoodResponse;
   final Map<String, dynamic>? weeklySummary;
@@ -46,6 +47,7 @@ class Health360State extends Equatable {
     this.redeemedVouchers = const [],
     this.userId,
     this.weatherData,
+    this.userContext,
     this.lastOrderResponse,
     this.scannedFoodResponse,
     this.weeklySummary,
@@ -70,6 +72,7 @@ class Health360State extends Equatable {
     bool clearScannedFood = false,
     String? userId,
     Map<String, dynamic>? weatherData,
+    Map<String, dynamic>? userContext,
     Map<String, dynamic>? lastOrderResponse,
     Map<String, dynamic>? scannedFoodResponse,
     Map<String, dynamic>? weeklySummary,
@@ -93,6 +96,7 @@ class Health360State extends Equatable {
       redeemedVouchers: redeemedVouchers ?? this.redeemedVouchers,
       userId: userId ?? this.userId,
       weatherData: weatherData ?? this.weatherData,
+      userContext: userContext ?? this.userContext,
       lastOrderResponse: lastOrderResponse ?? this.lastOrderResponse,
       scannedFoodResponse: scannedFoodResponse ?? this.scannedFoodResponse,
       weeklySummary: weeklySummary ?? this.weeklySummary,
@@ -118,6 +122,7 @@ class Health360State extends Equatable {
         redeemedVouchers,
         userId,
         weatherData,
+        userContext,
         lastOrderResponse,
         scannedFoodResponse,
         weeklySummary,

@@ -25,7 +25,20 @@ class _AudioSedPageState extends State<AudioSedPage> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    return BlocBuilder<Health360Cubit, Health360State>(
+    return BlocConsumer<Health360Cubit, Health360State>(
+      listenWhen: (previous, current) =>
+          current.errorMsg != null && previous.errorMsg != current.errorMsg,
+      listener: (context, state) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(state.errorMsg!),
+            backgroundColor: AppColors.errorColor,
+            duration: const Duration(seconds: 4),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        context.read<Health360Cubit>().clearError();
+      },
       builder: (context, state) {
         // Render Onboarding Quiz if not completed
         if (!state.isSurveyCompleted) {
@@ -35,45 +48,158 @@ class _AudioSedPageState extends State<AudioSedPage> {
           return const OnboardingQuizPage();
         }
 
+        final symptomText = _getSymptomProfile(state.symptoms);
+
         // Render main dashboard with segmented tab controller
         return Scaffold(
-          backgroundColor: isDark ? const Color(0xFF020617) : const Color(0xFFF4F7F6),
-          appBar: AppBar(
-            backgroundColor: isDark ? const Color(0xFF0C1220) : AppColors.primaryBlue,
-            foregroundColor: Colors.white,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                // Return or exit app context
-                Navigator.of(context).maybePop();
+          backgroundColor:
+              isDark ? const Color(0xFF020617) : const Color(0xFFF4F7F6),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(110),
+            child: Builder(
+              builder: (context) {
+                final statusBarHeight = MediaQuery.of(context).padding.top;
+                
+                final alertsList = state.userContext?['alerts'] as List<dynamic>? ?? [];
+                final hasAlert = alertsList.isNotEmpty;
+
+                final alertMessage = hasAlert 
+                    ? (alertsList[0]['body'] as String? ?? 'Cảnh báo sức khỏe') 
+                    : 'Hệ thống hô hấp an toàn, không phát hiện nguy cơ';
+                final alertBgColor = hasAlert ? const Color(0xFFFDE7E8) : const Color(0xFFE9FBF2);
+                final alertBorderColor = hasAlert ? AppColors.errorColor : AppColors.successColor;
+                final alertIcon = hasAlert ? '⚠️' : '✅';
+                final alertTextCol = hasAlert ? AppColors.errorColor : AppColors.successColor;
+
+                return Container(
+                  padding: EdgeInsets.only(
+                    top: statusBarHeight + 8,
+                    left: 12,
+                    right: 12,
+                    bottom: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF0C1220) : AppColors.primaryBlue,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Profile & Actions Row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white24,
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    '👤',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    state.userContext?['name'] as String? ?? 'Chưa có thông tin',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Vàng | ${state.coins} Lxu | $symptomText',
+                                    style: const TextStyle(
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.refresh, color: Colors.white, size: 20),
+                                tooltip: 'Làm lại khảo sát',
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () {
+                                  context.read<Health360Cubit>().resetSurvey();
+                                },
+                              ),
+                              const SizedBox(width: 12),
+                              IconButton(
+                                icon: const Icon(Icons.history, color: Colors.white, size: 20),
+                                tooltip: 'Báo cáo tuần',
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () {
+                                  context.push('/history');
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      // Warning Alert Banner
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: alertBgColor,
+                          border: Border.all(color: alertBorderColor, width: 1.2),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              alertIcon,
+                              style: const TextStyle(fontSize: 11),
+                            ),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                alertMessage,
+                                style: TextStyle(
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.bold,
+                                  color: alertTextCol,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
-            title: const Text(
-              'LONG CHÂU AICARE',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.5,
-              ),
-            ),
-            centerTitle: true,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.refresh, color: Colors.white, size: 20),
-                tooltip: 'Làm lại khảo sát',
-                onPressed: () {
-                  context.read<Health360Cubit>().resetSurvey();
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.history, color: Colors.white, size: 20),
-                tooltip: 'Báo cáo tuần',
-                onPressed: () {
-                  context.push('/history');
-                },
-              ),
-            ],
           ),
           body: Column(
             children: [
@@ -102,7 +228,8 @@ class _AudioSedPageState extends State<AudioSedPage> {
     );
   }
 
-  Widget _buildTabItem(BuildContext context, Health360State state, int tabIndex, String label) {
+  Widget _buildTabItem(
+      BuildContext context, Health360State state, int tabIndex, String label) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final isSelected = state.currentTab == tabIndex;
@@ -231,7 +358,8 @@ class _OnboardingSyncViewState extends State<OnboardingSyncView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(AppColors.primaryBlue),
               ),
               const SizedBox(height: 24),
               AnimatedSwitcher(

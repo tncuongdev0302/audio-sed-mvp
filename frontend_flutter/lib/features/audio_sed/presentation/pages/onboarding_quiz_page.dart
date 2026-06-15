@@ -69,18 +69,16 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
     final isDark = theme.brightness == Brightness.dark;
 
     // FPT Long Châu Design System & App Theming Alignment
-    final primaryColor = isDark ? const Color(0xFF38BDF8) : AppColors.primaryBlue;
-    final appBarBg = isDark ? const Color(0xFF0C1220) : AppColors.primaryBlue;
-    final scaffoldBg = isDark ? const Color(0xFF020617) : const Color(0xFFF4F7F6);
-    final cardBg = isDark ? const Color(0xFF131C2E) : Colors.white;
-    final borderColor = isDark ? const Color(0xFF1E293B) : const Color(0xFFE0E0E0);
-    final titleColor = isDark ? Colors.white : AppColors.primaryBlueDark;
-    final textColor = isDark ? const Color(0xFFF8FAFC) : Colors.black87;
-    final unselectedTagBg = isDark ? const Color(0xFF1E293B) : const Color(0xFFF0F0F0);
-    final unselectedTagText = isDark ? const Color(0xFF94A3B8) : Colors.grey.shade600;
+    final primaryColor = isDark ? const Color(0xFF38BDF8) : AppColors.brandPrimary;
+    final appBarBg = isDark ? const Color(0xFF0C1220) : AppColors.brandPrimary;
+    final scaffoldBg = isDark ? const Color(0xFF020617) : AppColors.bgBase;
+    final cardBg = isDark ? const Color(0xFF131C2E) : AppColors.bgSurface;
+    final borderColor = isDark ? const Color(0xFF1E293B) : AppColors.borderColor;
+    final titleColor = isDark ? Colors.white : AppColors.textPrimary;
+    final unselectedTagBg = isDark ? const Color(0xFF1E293B) : AppColors.bgBase;
+    final unselectedTagText = isDark ? const Color(0xFF94A3B8) : AppColors.textSecondary;
 
-    const accentTeal = Color(0xFF00A896);
-    final lightTealBg = isDark ? const Color(0xFF004D40) : const Color(0xFFE0F2F1);
+    final lightTealBg = isDark ? AppColors.brandPrimary.withValues(alpha: 0.15) : AppColors.brandPrimaryLight;
 
     return BlocBuilder<Health360Cubit, Health360State>(
       builder: (context, state) {
@@ -99,7 +97,7 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
             title: const Text(
               'KHẢO SÁT SỨC KHỎE AICARE',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 letterSpacing: 0.5,
@@ -133,14 +131,19 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                       Text(
                         '🎯 Mục tiêu của bạn hôm nay là gì?',
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600, // Semi-Bold
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
                           color: titleColor,
                         ),
                       ),
                       const SizedBox(height: 12),
                       ...List.generate(_q1Options.length, (index) {
                         final isSelected = _selectedQ1 == index;
+                        final optionBg = isSelected
+                            ? (isDark ? AppColors.brandPrimary.withValues(alpha: 0.15) : AppColors.brandPrimaryLight)
+                            : cardBg;
+                        final optionBorderColor = isSelected ? AppColors.brandPrimary : borderColor;
+
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: InkWell(
@@ -154,31 +157,33 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: isSelected ? accentTeal : borderColor,
+                                  color: optionBorderColor,
                                   width: isSelected ? 1.5 : 1.0,
                                 ),
-                                color: cardBg,
+                                color: optionBg,
                               ),
                               child: Row(
                                 children: [
                                   Container(
-                                    width: 18,
-                                    height: 18,
+                                    width: 16,
+                                    height: 16,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: isSelected ? accentTeal : Colors.grey,
-                                        width: 2,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? const Color(0xFF64748B) : AppColors.textTertiary),
+                                        width: 1.5,
                                       ),
                                     ),
                                     child: isSelected
                                         ? Center(
                                             child: Container(
-                                              width: 10,
-                                              height: 10,
-                                              decoration: const BoxDecoration(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: accentTeal,
+                                                color: AppColors.brandPrimary,
                                               ),
                                             ),
                                           )
@@ -189,9 +194,11 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                                     child: Text(
                                       _q1Options[index],
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal, // Regular
-                                        color: textColor,
+                                        fontSize: 11,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? Colors.white : AppColors.textSecondary),
                                       ),
                                     ),
                                   ),
@@ -226,14 +233,19 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                       Text(
                         '✅ Hiện tại tình trạng sức khỏe của bạn như thế nào?',
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600, // Semi-Bold
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
                           color: titleColor,
                         ),
                       ),
                       const SizedBox(height: 12),
                       ...List.generate(_q2Options.length, (index) {
                         final isSelected = _selectedQ2 == index;
+                        final optionBg = isSelected
+                            ? (isDark ? AppColors.brandPrimary.withValues(alpha: 0.15) : AppColors.brandPrimaryLight)
+                            : cardBg;
+                        final optionBorderColor = isSelected ? AppColors.brandPrimary : borderColor;
+
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: InkWell(
@@ -247,31 +259,33 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: isSelected ? accentTeal : borderColor,
+                                  color: optionBorderColor,
                                   width: isSelected ? 1.5 : 1.0,
                                 ),
-                                color: cardBg,
+                                color: optionBg,
                               ),
                               child: Row(
                                 children: [
                                   Container(
-                                    width: 18,
-                                    height: 18,
+                                    width: 16,
+                                    height: 16,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       border: Border.all(
-                                        color: isSelected ? accentTeal : Colors.grey,
-                                        width: 2,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? const Color(0xFF64748B) : AppColors.textTertiary),
+                                        width: 1.5,
                                       ),
                                     ),
                                     child: isSelected
                                         ? Center(
                                             child: Container(
-                                              width: 10,
-                                              height: 10,
-                                              decoration: const BoxDecoration(
+                                              width: 8,
+                                              height: 8,
+                                              decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: accentTeal,
+                                                color: AppColors.brandPrimary,
                                               ),
                                             ),
                                           )
@@ -282,9 +296,11 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                                     child: Text(
                                       _q2Options[index],
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal, // Regular
-                                        color: textColor,
+                                        fontSize: 11,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? Colors.white : AppColors.textSecondary),
                                       ),
                                     ),
                                   ),
@@ -319,14 +335,19 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                       Text(
                         '👥 Bạn thuộc nhóm đối tượng nào? (Chọn nhiều mục)',
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600, // Semi-Bold
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
                           color: titleColor,
                         ),
                       ),
                       const SizedBox(height: 12),
                       ...List.generate(_q3Options.length, (index) {
                         final isSelected = _selectedQ3[index];
+                        final optionBg = isSelected
+                            ? (isDark ? AppColors.brandPrimary.withValues(alpha: 0.15) : AppColors.brandPrimaryLight)
+                            : cardBg;
+                        final optionBorderColor = isSelected ? AppColors.brandPrimary : borderColor;
+
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: InkWell(
@@ -340,29 +361,31 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: isSelected ? accentTeal : borderColor,
+                                  color: optionBorderColor,
                                   width: isSelected ? 1.5 : 1.0,
                                 ),
-                                color: cardBg,
+                                color: optionBg,
                               ),
                               child: Row(
                                 children: [
                                   Container(
-                                    width: 18,
-                                    height: 18,
+                                    width: 16,
+                                    height: 16,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: isSelected ? accentTeal : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(3),
+                                      color: isSelected ? AppColors.brandPrimary : Colors.transparent,
                                       border: Border.all(
-                                        color: isSelected ? accentTeal : Colors.grey,
-                                        width: 2,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? const Color(0xFF64748B) : AppColors.textTertiary),
+                                        width: 1.5,
                                       ),
                                     ),
                                     child: isSelected
                                         ? const Center(
                                             child: Icon(
                                               Icons.check,
-                                              size: 14,
+                                              size: 12,
                                               color: Colors.white,
                                             ),
                                           )
@@ -373,9 +396,11 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                                     child: Text(
                                       _q3Options[index],
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal, // Regular
-                                        color: textColor,
+                                        fontSize: 11,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? Colors.white : AppColors.textSecondary),
                                       ),
                                     ),
                                   ),
@@ -410,8 +435,8 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                       Text(
                         '🔔 Bạn muốn AI cảnh báo điều gì? (Chọn nhiều mục)',
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600, // Semi-Bold
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
                           color: titleColor,
                         ),
                       ),
@@ -445,7 +470,7 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                                 borderRadius: BorderRadius.circular(16),
                                 color: isSelected ? lightTealBg : unselectedTagBg,
                                 border: isSelected 
-                                    ? Border.all(color: accentTeal, width: 1)
+                                    ? Border.all(color: AppColors.brandPrimary, width: 1)
                                     : null,
                               ),
                               child: Row(
@@ -454,8 +479,8 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                                   if (isSelected) ...[
                                     const Icon(
                                       Icons.check,
-                                      size: 12,
-                                      color: accentTeal,
+                                      size: 10,
+                                      color: AppColors.brandPrimary,
                                     ),
                                     const SizedBox(width: 4),
                                   ],
@@ -463,8 +488,8 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                                     _q4Options[index],
                                     style: TextStyle(
                                       fontSize: 10,
-                                      fontWeight: FontWeight.w500, // Medium weight
-                                      color: isSelected ? accentTeal : unselectedTagText,
+                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                                      color: isSelected ? AppColors.brandPrimary : unselectedTagText,
                                     ),
                                   ),
                                 ],
@@ -498,14 +523,19 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                       Text(
                         '🏆 Mục tiêu sức khỏe bạn muốn đạt được?',
                         style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600, // Semi-Bold
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
                           color: titleColor,
                         ),
                       ),
                       const SizedBox(height: 12),
                       ...List.generate(_q5Options.length, (index) {
                         final isSelected = _selectedQ5[index];
+                        final optionBg = isSelected
+                            ? (isDark ? AppColors.brandPrimary.withValues(alpha: 0.15) : AppColors.brandPrimaryLight)
+                            : cardBg;
+                        final optionBorderColor = isSelected ? AppColors.brandPrimary : borderColor;
+
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: InkWell(
@@ -519,29 +549,31 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 border: Border.all(
-                                  color: isSelected ? accentTeal : borderColor,
+                                  color: optionBorderColor,
                                   width: isSelected ? 1.5 : 1.0,
                                 ),
-                                color: cardBg,
+                                color: optionBg,
                               ),
                               child: Row(
                                 children: [
                                   Container(
-                                    width: 18,
-                                    height: 18,
+                                    width: 16,
+                                    height: 16,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: isSelected ? accentTeal : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(3),
+                                      color: isSelected ? AppColors.brandPrimary : Colors.transparent,
                                       border: Border.all(
-                                        color: isSelected ? accentTeal : Colors.grey,
-                                        width: 2,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? const Color(0xFF64748B) : AppColors.textTertiary),
+                                        width: 1.5,
                                       ),
                                     ),
                                     child: isSelected
                                         ? const Center(
                                             child: Icon(
                                               Icons.check,
-                                              size: 14,
+                                              size: 12,
                                               color: Colors.white,
                                             ),
                                           )
@@ -552,9 +584,11 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                                     child: Text(
                                       _q5Options[index],
                                       style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal, // Regular
-                                        color: textColor,
+                                        fontSize: 11,
+                                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                        color: isSelected
+                                            ? AppColors.brandPrimary
+                                            : (isDark ? Colors.white : AppColors.textSecondary),
                                       ),
                                     ),
                                   ),
@@ -567,7 +601,7 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 80), // Extra bottom padding for floating action bar
+                const SizedBox(height: 80),
               ],
             ),
           ),
@@ -577,7 +611,7 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
               color: isDark ? const Color(0xFF0C1220) : Colors.white,
               border: Border(
                 top: BorderSide(
-                  color: isDark ? const Color(0xFF1E293B) : Colors.grey.shade200,
+                  color: isDark ? const Color(0xFF1E293B) : AppColors.borderColor,
                 ),
               ),
             ),
@@ -585,23 +619,23 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Floating Reward Text
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       '🎁 Hoàn thành khảo sát nhận ngay ',
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w500, // Medium weight
-                        color: Color(0xFFF39C12),
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.warningColor,
                       ),
                     ),
                     Text(
                       '+50 Lxu',
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w500, // Medium weight
-                        color: Color(0xFFF39C12),
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.warningColor,
                       ),
                     ),
                   ],
@@ -614,10 +648,10 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primaryColor,
-                      foregroundColor: isDark ? const Color(0xFF0F172A) : Colors.white,
+                      foregroundColor: Colors.white,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                     ),
                     onPressed: state.isOnboardingLoading
@@ -668,12 +702,12 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
                               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                             ),
                           )
-                        : Text(
-                            'TIẾP TỤC ĐỂ ĐÁNH GIÁ',
+                        : const Text(
+                            'TIẾP TỤC',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: isDark ? const Color(0xFF0F172A) : Colors.white,
+                              color: Colors.white,
                             ),
                           ),
                   ),

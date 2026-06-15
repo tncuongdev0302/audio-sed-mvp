@@ -90,5 +90,188 @@
     ],
     "vitals": {},
     "created_at": "2026-06-11T00:00:00"
+  },
+  "b33bf4cb-2c6c-41f8-ad00-70cbc0c4adb9": {
+    "id": "b33bf4cb-2c6c-41f8-ad00-70cbc0c4adb9",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9081454,
+    "long": 106.7428346,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-15T13:37:00.808945"
+  },
+  "5aa15910-782c-4f16-8f22-3efc30592bd5": {
+    "id": "5aa15910-782c-4f16-8f22-3efc30592bd5",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079463,
+    "long": 106.7427229,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_1",
+      "doi_tuong_1",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-15T13:40:30.283495"
+  },
+  "88f3f951-e6d9-4386-bcf3-b09c45b5e6c6": {
+    "id": "88f3f951-e6d9-4386-bcf3-b09c45b5e6c6",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9080931,
+    "long": 106.7427662,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-15T13:43:34.921454"
+  },
+  "fcd13284-78ab-4697-b58f-0c5acd410ecd": {
+    "id": "fcd13284-78ab-4697-b58f-0c5acd410ecd",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079444,
+    "long": 106.7427485,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-15T13:51:48.512169"
+  },
+  "e9efbe33-dcca-4f39-8d11-cb3668c3d18b": {
+    "id": "e9efbe33-dcca-4f39-8d11-cb3668c3d18b",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079558,
+    "long": 106.7427346,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-15T14:00:06.898330"
+  },
+  "b491f2cc-d82f-4ced-b7dd-6638f5ba8fcf": {
+    "id": "b491f2cc-d82f-4ced-b7dd-6638f5ba8fcf",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.78,
+    "long": 106.7,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-15T14:01:38.230897"
+  },
+  "5d1b7f89-d680-442c-a94f-b8ccdd8e4a15": {
+    "id": "5d1b7f89-d680-442c-a94f-b8ccdd8e4a15",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9081846,
+    "long": 106.7427482,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-15T14:02:31.230944"
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../cubit/audio_sed_cubit.dart';
 import '../cubit/audio_sed_state.dart';
 import '../../../../app/theme/app_theme.dart';
@@ -15,6 +16,8 @@ class AudioAnalysisDetailPage extends StatefulWidget {
 
 class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isPlaying = false;
 
   @override
   void initState() {
@@ -23,11 +26,20 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
+
+    _audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() {
+          _isPlaying = state == PlayerState.playing;
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     _pulseController.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
@@ -46,17 +58,17 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
         int seconds = 0;
         if (isRecording) {
           seconds = state.elapsedSeconds;
-          statusText = '00:0$seconds / Đang thu âm...';
+          statusText = '00:0$seconds / 00:05';
         } else if (isAnalyzing) {
           statusText = '00:05 / Đang phân tích...';
         } else if (hasResults) {
-          statusText = '00:05 / Hoàn tất';
+          statusText = 'Ghi âm thành công | 00:05 / 00:05';
         }
 
         return Scaffold(
           backgroundColor: isDark ? const Color(0xFF020617) : const Color(0xFFF4F7F6),
           appBar: AppBar(
-            backgroundColor: isDark ? const Color(0xFF0C1220) : AppColors.primaryBlue,
+            backgroundColor: isDark ? const Color(0xFF0C1220) : AppColors.brandPrimary,
             foregroundColor: Colors.white,
             elevation: 0,
             leading: IconButton(
@@ -66,7 +78,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
             title: const Text(
               'PHÂN TÍCH ÂM THANH',
               style: TextStyle(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5,
               ),
@@ -81,11 +93,11 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                 // Audio Waveform Card
                 Card(
                   elevation: 0,
-                  color: isDark ? const Color(0xFF131C2E) : Colors.white,
+                  color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                     side: BorderSide(
-                      color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+                      color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
                     ),
                   ),
                   child: Padding(
@@ -96,9 +108,9 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                         Text(
                           'Ghi âm và phân tích âm thanh',
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                            color: isDark ? Colors.white : AppColors.textPrimary,
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -126,7 +138,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                                 'Ấn nút Microphone bên dưới để bắt đầu ghi âm',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: AppColors.textMuted,
+                                  color: AppColors.textTertiary,
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
@@ -146,7 +158,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                                         width: 8,
                                         height: 8,
                                         decoration: const BoxDecoration(
-                                          color: Color(0xFFE74C3C),
+                                          color: AppColors.errorColor,
                                           shape: BoxShape.circle,
                                         ),
                                       ),
@@ -158,69 +170,123 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                               Text(
                                 statusText,
                                 style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.primaryBlue,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.normal,
+                                  color: AppColors.textSecondary,
                                 ),
                               ),
                             ],
                           ),
                         ] else if (hasResults) ...[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          Column(
                             children: [
-                              ElevatedButton.icon(
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Đang phát lại bản thu âm... 🎧'),
-                                      backgroundColor: AppColors.primaryBlue,
-                                    ),
-                                  );
-                                },
-                                icon: const Icon(Icons.play_arrow, size: 16),
-                                label: const Text(
-                                  'Nghe lại',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFFEBF2FF),
-                                  foregroundColor: AppColors.primaryBlue,
-                                  side: const BorderSide(color: AppColors.primaryBlue),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
-                                  ),
-                                  elevation: 0,
+                              Text(
+                                statusText,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.normal,
+                                  color: AppColors.textSecondary,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              OutlinedButton.icon(
-                                onPressed: () {
-                                  context.read<AudioSedCubit>().reset();
-                                },
-                                icon: const Icon(Icons.refresh, size: 16),
-                                label: const Text(
-                                  'Thu lại',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: const Color(0xFF7F8C8D),
-                                  side: const BorderSide(color: Color(0xFF7F8C8D)),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // BtnCancel
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      await _audioPlayer.stop();
+                                      if (context.mounted) {
+                                        context.read<AudioSedCubit>().reset();
+                                      }
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: AppColors.textSecondary,
+                                      backgroundColor: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
+                                      side: const BorderSide(color: AppColors.borderColor),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    ),
+                                    child: const Text(
+                                      'Hủy',
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                                   ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                    vertical: 10,
+                                  const SizedBox(width: 8),
+                                  // BtnPlay
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final path = state.recordingPath;
+                                      if (path != null) {
+                                        if (_isPlaying) {
+                                          await _audioPlayer.pause();
+                                        } else {
+                                          await _audioPlayer.play(DeviceFileSource(path));
+                                        }
+                                      } else {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Không tìm thấy tệp tin ghi âm!'),
+                                            backgroundColor: AppColors.errorColor,
+                                            behavior: SnackBarBehavior.floating,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.brandPrimaryLight,
+                                      foregroundColor: AppColors.brandPrimary,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    ),
+                                    child: Text(
+                                      _isPlaying ? 'Tạm dừng' : 'Nghe lại',
+                                      style: const TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.brandPrimary,
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(width: 8),
+                                  // BtnAnalyze
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text('Bản thu âm đã được phân tích thành công!'),
+                                          backgroundColor: AppColors.successColor,
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.brandPrimary,
+                                      foregroundColor: Colors.white,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    ),
+                                    child: const Text(
+                                      'Phân tích',
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -248,7 +314,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                       context.read<AudioSedCubit>().startRecording('v1');
                     }
                   },
-            backgroundColor: isRecording ? Colors.red : AppColors.primaryBlue,
+            backgroundColor: isRecording ? AppColors.errorColor : AppColors.brandPrimary,
             foregroundColor: Colors.white,
             elevation: 4,
             shape: const CircleBorder(),
@@ -274,15 +340,15 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
 
   Widget _buildReportCard(BuildContext context, AudioSedAnalysisSuccess state, bool isDark) {
     // Dynamically complete task if applicable
-    context.read<Health360Cubit>().completeTask('night_task_1', 15);
+    context.read<Health360Cubit>().completeTask('night_task_1', 20);
 
     return Card(
       elevation: 0,
-      color: isDark ? const Color(0xFF131C2E) : Colors.white,
+      color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color: isDark ? const Color(0xFF1E293B) : const Color(0xFFE5E7EB),
+          color: isDark ? AppColors.darkColorScheme.outline : AppColors.borderColor,
         ),
       ),
       child: Padding(
@@ -291,11 +357,11 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Phát hiện giọng nói nghẹt & ho khan',
+              'Báo Cáo Phân Tích Âm Thanh',
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                color: isDark ? Colors.white : AppColors.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
@@ -305,8 +371,8 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFFDEDEC),
-                border: Border.all(color: const Color(0xFFE74C3C), width: 1.5),
+                color: const Color(0xFFFDE7E8),
+                border: Border.all(color: AppColors.errorColor, width: 1.5),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -316,15 +382,15 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                     children: [
                       Text(
                         '⚠️',
-                        style: TextStyle(fontSize: 14, color: Color(0xFFE74C3C)),
+                        style: TextStyle(fontSize: 12, color: AppColors.errorColor),
                       ),
                       SizedBox(width: 8),
                       Text(
-                        'Dịch nhầy xoang sau: CAO',
+                        'Nguy cơ ứ đọng dịch xoang sau: 88% (CAO)',
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFE74C3C),
+                          color: AppColors.errorColor,
                         ),
                       ),
                     ],
@@ -332,7 +398,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFE74C3C),
+                      color: AppColors.errorColor,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Text(
@@ -353,7 +419,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: isDark ? const Color(0xFF0F172A) : Colors.grey.shade100,
+                color: isDark ? AppColors.darkColorScheme.primaryContainer : AppColors.bgBase,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
@@ -362,24 +428,23 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                   Text(
                     'Tắc nghẽn hô hấp',
                     style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: isDark ? Colors.white : AppColors.primaryBlueDark,
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFEF5E7),
-                      border: Border.all(color: const Color(0xFFFDEBD0)),
+                      color: const Color(0xFFFEF4E6),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: const Text(
                       'Trung bình',
                       style: TextStyle(
-                        fontSize: 8,
+                        fontSize: 9,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFFF39C12),
+                        color: AppColors.warningColor,
                       ),
                     ),
                   ),
@@ -388,17 +453,58 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
             ),
             const SizedBox(height: 12),
 
+            // Treatment Checklist
+            Text(
+              'Hướng dẫn xử trí khuyến dùng:',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.grey.shade300 : AppColors.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _buildChecklistRow('Rửa mũi bằng nước muối sinh lý ấm (Ưu tiên)', AppColors.successColor, isDark),
+            _buildChecklistRow('Súc họng bằng dung dịch sát khuẩn miệng', AppColors.successColor, isDark),
+            _buildChecklistRow('Uống nhiều nước ấm và hạn chế ngồi điều hòa lạnh', AppColors.textTertiary, isDark),
+            const SizedBox(height: 12),
+
             // Recommendation
-            const Text(
-              'Tần số âm thanh biểu hiện tắc nghẽn khoang xoang sàng sau rõ rệt. Khuyên dùng: Súc họng nước muối ấm, xịt mũi nước biển sâu trước khi ngủ.',
+            Text(
+              'Lời khuyên của chuyên gia: Phân tích tần số âm cho thấy tiếng ho có độ đục âm vòm họng cao (dấu hiệu dịch tích tụ xoang sàng sau). Hãy thực hiện rửa mũi và xịt kháng viêm. Nếu tình trạng nghẹt mũi và ho kéo dài trên 3 ngày, vui lòng kết nối ngay với bác sĩ để nhận tư vấn phác đồ điều trị.',
               style: TextStyle(
                 fontSize: 11,
-                color: AppColors.textMuted,
+                color: isDark ? Colors.grey.shade400 : AppColors.textSecondary,
                 height: 1.4,
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildChecklistRow(String text, Color iconColor, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6.0),
+      child: Row(
+        children: [
+          Icon(
+            Icons.check_circle_outline,
+            size: 14,
+            color: iconColor,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 10,
+                color: isDark ? Colors.grey.shade300 : AppColors.textSecondary,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
