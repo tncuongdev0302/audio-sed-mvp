@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:record/record.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../domain/usecases/submit_user_intake.dart';
 import '../../domain/usecases/get_context_weather.dart';
@@ -45,6 +46,34 @@ class Health360Cubit extends Cubit<Health360State> {
     emit(state.copyWith(symptoms: updatedSymptoms));
   }
 
+  Future<Position?> _getCurrentLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return null;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return null;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return null;
+      }
+
+      return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 5),
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> submitSurvey({List<String>? symptoms, List<String>? diseaseTags}) async {
     emit(state.copyWith(isOnboardingLoading: true, clearError: true));
     try {
@@ -57,14 +86,19 @@ class Health360Cubit extends Cubit<Health360State> {
       }
       final tags = diseaseTags ?? const ['ENT'];
 
+      // Fetch dynamic GPS location
+      final position = await _getCurrentLocation();
+      final lat = position?.latitude ?? 10.78;
+      final long = position?.longitude ?? 106.7;
+
       // 1. Call User Intake Use Case
       final intakeResult = await _submitUserIntake(
         SubmitUserIntakeParams(
           name: 'Minh Tuấn',
           symptoms: symptomList,
           diseaseTags: tags,
-          lat: 10.78,
-          long: 106.7,
+          lat: lat,
+          long: long,
           deviceToken: 'fcm_token_health360',
         ),
       );
@@ -193,67 +227,10 @@ class Health360Cubit extends Cubit<Health360State> {
         (response) async {
           final int coinReward = state.isScanRewarded ? 0 : 50;
 
-          // Override/ensure the correct simulation data for each foodKey
-          final Map<String, dynamic> mockedResponse = Map<String, dynamic>.from(response);
-          if (foodKey == 'phoga') {
-            mockedResponse['foods'] = [
-              {
-                'class_id': 0,
-                'name': 'Pho',
-                'name_vi': 'Phở Gà (Chicken Noodle)',
-                'confidence': 0.95,
-                'bbox': [50, 50, 400, 400],
-                'nutrition': {'Calories': 450, 'Fat': 10, 'Saturates': 3.5, 'Sugar': 3, 'Salt': 2.8}
-              }
-            ];
-            mockedResponse['total_nutrition'] = {'Calories': 450, 'Fat': 10, 'Saturates': 3.5, 'Sugar': 3, 'Salt': 2.8};
-            mockedResponse['risk_alerts'] = [];
-          } else if (foodKey == 'haisan') {
-            mockedResponse['foods'] = [
-              {
-                'class_id': 18,
-                'name': 'Lau',
-                'name_vi': 'Lẩu Hải Sản Cay',
-                'confidence': 0.92,
-                'bbox': [40, 40, 420, 420],
-                'nutrition': {'Calories': 550, 'Fat': 18, 'Saturates': 6, 'Sugar': 3, 'Salt': 3.5}
-              }
-            ];
-            mockedResponse['total_nutrition'] = {'Calories': 550, 'Fat': 18, 'Saturates': 6, 'Sugar': 3, 'Salt': 3.5};
-            mockedResponse['risk_alerts'] = [
-              {
-                'type': 'ent_irritant',
-                'severity': 'warning',
-                'message_vi': '🌶️ Lẩu Hải Sản Cay nóng — không tốt cho Tai Mũi Họng',
-                'food_name': 'Lẩu Hải Sản Cay'
-              }
-            ];
-          } else if (foodKey == 'dalanh') {
-            mockedResponse['foods'] = [
-              {
-                'class_id': 20,
-                'name': 'dalanh',
-                'name_vi': 'Kem Trái Cây Lạnh',
-                'confidence': 0.98,
-                'bbox': [60, 60, 380, 380],
-                'nutrition': {'Calories': 200, 'Fat': 8, 'Saturates': 2, 'Sugar': 3, 'Salt': 0.8}
-              }
-            ];
-            mockedResponse['total_nutrition'] = {'Calories': 200, 'Fat': 8, 'Saturates': 2, 'Sugar': 3, 'Salt': 0.8};
-            mockedResponse['risk_alerts'] = [
-              {
-                'type': 'ent_irritant',
-                'severity': 'warning',
-                'message_vi': '❄️ Kem Trái Cây Lạnh lạnh buốt — dễ gây buốt cổ họng và kích ứng Tai Mũi Họng',
-                'food_name': 'Kem Trái Cây Lạnh'
-              }
-            ];
-          }
-
           emit(state.copyWith(
             isScanning: false,
             scannedFoodKey: foodKey,
-            scannedFoodResponse: mockedResponse,
+            scannedFoodResponse: response,
             isScanRewarded: true,
             coins: state.coins + coinReward,
           ));
@@ -377,14 +354,18 @@ class Health360Cubit extends Cubit<Health360State> {
       try {
         final userId = state.userId ?? 'user_001';
         
+        final position = await _getCurrentLocation();
+        final lat = position?.latitude ?? 10.78;
+        final long = position?.longitude ?? 106.7;
+
         final orderResult = await _redeemVoucher(
           RedeemVoucherParams(
             userId: userId,
             productId: 'voucher_sinufresh_50k',
             productName: 'Voucher 50K Xịt Mũi Sinufresh',
             cost: cost,
-            lat: 10.78,
-            long: 106.7,
+            lat: lat,
+            long: long,
           ),
         );
 

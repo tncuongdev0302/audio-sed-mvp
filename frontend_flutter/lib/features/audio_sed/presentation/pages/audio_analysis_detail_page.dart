@@ -64,7 +64,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
               onPressed: () => Navigator.of(context).maybePop(),
             ),
             title: const Text(
-              'PHÂN TÍCH ÂM THANH GIỌNG HO',
+              'PHÂN TÍCH ÂM THANH',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
@@ -94,7 +94,7 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ghi âm giọng nói và tiếng ho',
+                          'Ghi âm và phân tích âm thanh',
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
@@ -238,37 +238,33 @@ class _AudioAnalysisDetailPageState extends State<AudioAnalysisDetailPage> with 
               ],
             ),
           ),
-          floatingActionButton: SizedBox(
-            width: 72,
-            height: 72,
-            child: FloatingActionButton(
-              onPressed: isAnalyzing
-                  ? null
-                  : () {
-                      if (isRecording) {
-                        context.read<AudioSedCubit>().stopRecordingAndAnalyze('v1');
-                      } else {
-                        context.read<AudioSedCubit>().startRecording('v1');
-                      }
-                    },
-              backgroundColor: isRecording ? Colors.red : AppColors.primaryBlue,
-              foregroundColor: Colors.white,
-              elevation: 4,
-              shape: const CircleBorder(),
-              child: isAnalyzing
-                  ? const SizedBox(
-                      width: 28,
-                      height: 28,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.5,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    )
-                  : Icon(
-                      isRecording ? Icons.stop : Icons.mic,
-                      size: 32,
+          floatingActionButton: FloatingActionButton(
+            onPressed: isAnalyzing
+                ? null
+                : () {
+                    if (isRecording) {
+                      context.read<AudioSedCubit>().stopRecordingAndAnalyze('v1');
+                    } else {
+                      context.read<AudioSedCubit>().startRecording('v1');
+                    }
+                  },
+            backgroundColor: isRecording ? Colors.red : AppColors.primaryBlue,
+            foregroundColor: Colors.white,
+            elevation: 4,
+            shape: const CircleBorder(),
+            child: isAnalyzing
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
-            ),
+                  )
+                : Icon(
+                    isRecording ? Icons.stop : Icons.mic,
+                    size: 24,
+                  ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         );

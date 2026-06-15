@@ -131,7 +131,7 @@ class AIAssistantTab extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Phân Tích Âm Thanh Giọng Ho',
+                            'Phân Tích Âm Thanh',
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.bold,
@@ -140,10 +140,10 @@ class AIAssistantTab extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           const Text(
-                            'Thu âm giọng nói và tiếng ho để nhận diện sớm dấu hiệu nghẹt mũi, đờm họng sau.',
+                            'Thu âm giọng nói, tiếng ho và tiếng thở khi ngủ để phân tích và nhận diện sớm dấu hiệu bệnh lý.',
                             style: TextStyle(
                               fontSize: 10,
-                              color: AppColors.textMuted,
+                               color: AppColors.textMuted,
                               height: 1.3,
                             ),
                           ),

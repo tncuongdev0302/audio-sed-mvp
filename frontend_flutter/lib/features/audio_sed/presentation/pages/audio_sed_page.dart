@@ -80,14 +80,14 @@ class _AudioSedPageState extends State<AudioSedPage> {
               // Segmented Tab Bar Controller
               Container(
                 width: double.infinity,
-                height: 44,
+                height: 54,
                 color: isDark ? const Color(0xFF0C1220) : Colors.white,
                 child: Row(
                   children: [
-                    _buildTabItem(context, state, 0, 'Môi Trường'),
-                    _buildTabItem(context, state, 1, 'Trợ Lý AI'),
-                    _buildTabItem(context, state, 2, 'Nhiệm Vụ'),
-                    _buildTabItem(context, state, 3, 'Cẩm Nang'),
+                    _buildTabItem(context, state, 0, 'Trang chủ'),
+                    _buildTabItem(context, state, 1, 'Trợ lý AI'),
+                    _buildTabItem(context, state, 2, 'Nhiệm vụ'),
+                    _buildTabItem(context, state, 3, 'Cẩm nang'),
                   ],
                 ),
               ),
@@ -119,7 +119,7 @@ class _AudioSedPageState extends State<AudioSedPage> {
             Text(
               label,
               style: TextStyle(
-                fontSize: 11,
+                fontSize: 13,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 color: isSelected
                     ? AppColors.primaryBlue
@@ -127,11 +127,14 @@ class _AudioSedPageState extends State<AudioSedPage> {
               ),
             ),
             if (isSelected) ...[
-              const SizedBox(height: 4),
+              const SizedBox(height: 6),
               Container(
-                width: 40,
-                height: 2,
-                color: AppColors.primaryBlue,
+                width: 60,
+                height: 3,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryBlue,
+                  borderRadius: BorderRadius.circular(1.5),
+                ),
               ),
             ],
           ],
