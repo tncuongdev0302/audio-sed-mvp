@@ -131,7 +131,7 @@ class MissionsTab extends StatelessWidget {
           _buildMissionRow(
             context: context,
             icon: '🎙️',
-            text: 'Ghi âm phân tích giọng nói buổi tối (+15 Lxu)',
+            text: 'Ghi âm và phân tích âm thanh (+15 Lxu)',
             isCompleted: tcDone,
             onAction: () => context.push('/audio-analysis'),
             actionText: 'Làm ngay',

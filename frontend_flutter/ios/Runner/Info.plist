@@ -49,5 +49,9 @@
 	<string>Ứng dụng cần sử dụng microphone để ghi âm và phân tích hơi thở/ho của bạn.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Ứng dụng cần sử dụng camera để quét hình ảnh thực phẩm và phân tích dị nguyên.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Ứng dụng cần truy cập vị trí để lấy thông tin thời tiết và cảnh báo dị nguyên theo khu vực của bạn.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Ứng dụng cần truy cập vị trí để lấy thông tin thời tiết và cảnh báo dị nguyên theo khu vực của bạn.</string>
 </dict>
 </plist>

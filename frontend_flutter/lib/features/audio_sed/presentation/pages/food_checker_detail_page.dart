@@ -323,170 +323,77 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
                           ),
                         ),
                         const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            if (!_isCaptured) ...[
-                              if (_isCameraInitialized) ...[
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: Colors.red,
-                                      side: const BorderSide(color: Colors.red),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                    ),
-                                    icon: const Icon(Icons.videocam_off, size: 16),
-                                    label: const Text(
-                                      'TẮT CAMERA',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    onPressed: _isInitializingCamera ? null : () => _disposeCamera(),
-                                  ),
+                        if (_isCaptured && !state.isScanning)
+                          Center(
+                            child: OutlinedButton.icon(
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: AppColors.primaryBlue,
+                                side: const BorderSide(color: AppColors.primaryBlue),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primaryBlue,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                      elevation: 0,
-                                    ),
-                                    icon: _isTakingPicture
-                                        ? const SizedBox(
-                                            width: 14,
-                                            height: 14,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                            ),
-                                          )
-                                        : const Icon(Icons.camera, size: 16),
-                                    label: const Text(
-                                      'CHỤP ẢNH',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    onPressed: _isTakingPicture ? null : _takePicture,
-                                  ),
-                                ),
-                              ] else ...[
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    style: OutlinedButton.styleFrom(
-                                      foregroundColor: AppColors.primaryBlue,
-                                      side: const BorderSide(color: AppColors.primaryBlue),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                    ),
-                                    icon: const Icon(Icons.videocam, size: 16),
-                                    label: const Text(
-                                      'BẬT CAMERA',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    onPressed: _isInitializingCamera ? null : _initializeCamera,
-                                  ),
-                                ),
-                              ],
-                            ] else ...[
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: AppColors.primaryBlue,
-                                    side: const BorderSide(color: AppColors.primaryBlue),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
-                                  ),
-                                  icon: const Icon(Icons.replay, size: 16),
-                                  label: const Text(
-                                    'CHỤP LẠI',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  onPressed: state.isScanning
-                                      ? null
-                                      : () {
-                                          setState(() {
-                                            _isCaptured = false;
-                                            _capturedFile = null;
-                                          });
-                                          context.read<Health360Cubit>().clearScannedFood();
-                                        },
-                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                               ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF2ECC71),
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(vertical: 12),
-                                    elevation: 0,
-                                  ),
-                                  icon: state.isScanning
-                                      ? const SizedBox(
-                                          width: 14,
-                                          height: 14,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                          ),
-                                        )
-                                      : const Icon(Icons.check, size: 16),
-                                  label: const Text(
-                                    'XÁC NHẬN SCAN',
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onPressed: state.isScanning
-                                      ? null
-                                      : () {
-                                          context.read<Health360Cubit>().runScanner(_selectedFoodKey);
-                                        },
-                                ),
+                              icon: const Icon(Icons.replay, size: 14),
+                              label: const Text(
+                                'CHỤP LẠI',
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
                               ),
-                            ],
-                          ],
-                        ),
+                              onPressed: () {
+                                setState(() {
+                                  _isCaptured = false;
+                                  _capturedFile = null;
+                                });
+                                context.read<Health360Cubit>().clearScannedFood();
+                              },
+                            ),
+                          ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
-
+                
                 // Results Card
                 if (hasResults) ...[
                   _buildResultsCard(context, state, isDark),
                 ],
+                const SizedBox(height: 80), // Spacer for centered FAB
               ],
             ),
           ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: state.isScanning
+                ? null
+                : () {
+                    if (!_isCameraInitialized) {
+                      _initializeCamera();
+                    } else if (!_isCaptured) {
+                      _takePicture();
+                    } else {
+                      context.read<Health360Cubit>().runScanner(_selectedFoodKey);
+                    }
+                  },
+            backgroundColor: const Color(0xFF2ECC71),
+            shape: const CircleBorder(),
+            child: state.isScanning
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                : Icon(
+                    !_isCameraInitialized
+                        ? Icons.videocam
+                        : (!_isCaptured ? Icons.camera_alt : Icons.check),
+                    color: Colors.white,
+                    size: 24,
+                  ),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         );
       },
     );

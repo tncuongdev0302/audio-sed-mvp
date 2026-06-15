@@ -22,6 +22,7 @@ def _mock_weather() -> dict:
         "humidity": 78,
         "pm25": 85.0,
         "aqi": 4,
+        "wind_speed": 3.0,
         "timestamp": time.time(),
         "location_name": "Ho Chi Minh City (mock)",
     }
@@ -63,6 +64,7 @@ async def fetch_weather(lat: float, long: float) -> dict:
             "humidity": weather["main"]["humidity"],
             "pm25": components.get("pm2_5", 0),
             "aqi": air["list"][0]["main"]["aqi"],
+            "wind_speed": weather.get("wind", {}).get("speed", 0.0),
             "timestamp": time.time(),
             "location_name": weather.get("name", "Unknown"),
         }
