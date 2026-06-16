@@ -4,29 +4,29 @@ import 'package:google_fonts/google_fonts.dart';
 class AppColors {
   // Brand Colors from design.pen variables
   static const Color brandPrimary = Color(0xFF1250DC);
-  static const Color brandPrimaryLight = Color(0xFFE7EEFE);
-  static const Color textPrimary = Color(0xFF1B1E22);
-  static const Color textSecondary = Color(0xFF40464E);
-  static const Color textTertiary = Color(0xFF7A828F);
-  static const Color bgBase = Color(0xFFF5F6F8);
+  static const Color brandPrimaryLight = Color(0xFFEAEFFA);
+  static const Color textPrimary = Color(0xFF020B27);
+  static const Color textSecondary = Color(0xFF4A4F63);
+  static const Color textTertiary = Color(0xFFA9B2BE);
+  static const Color bgBase = Color(0xFFF6F7F9);
   static const Color bgSurface = Color(0xFFFFFFFF);
   static const Color borderColor = Color(0xFFE4E8ED);
-  static const Color successColor = Color(0xFF1FAD6C);
-  static const Color warningColor = Color(0xFFF79009);
-  static const Color errorColor = Color(0xFFF52427);
+  static const Color successColor = Color(0xFF51B848);
+  static const Color warningColor = Color(0xFFFA8C16);
+  static const Color errorColor = Color(0xFFF04438);
 
   // Legacy names mapped to design.pen tokens for backward compatibility
   static const Color primaryBlue = brandPrimary;
-  static const Color primaryBlueDark = Color(0xFF003366); // Dark navy for headers if needed
+  static const Color primaryBlueDark = Color(0xFF002C9A); // Updated to match Figma darker blue
   static const Color primaryBlueLight = brandPrimaryLight;
-  static const Color navyText = Color(0xFF003366);
+  static const Color navyText = Color(0xFF020B27); // Updated to textPrimary navy color
 
   static const Color accentOrange = warningColor;
-  static const Color accentOrangeHover = Color(0xFFD85D15);
+  static const Color accentOrangeHover = Color(0xFFE2783A); // Updated to Figma secondary orange
   static const Color accentOrangeLight = Color(0xFFFFF5F0);
 
   static const Color accentGreen = successColor;
-  static const Color accentGreenLight = Color(0xFFE6FBF1);
+  static const Color accentGreenLight = Color(0xFFE9FBF2); // Updated to match alert green light background
 
   static const Color textDark = textPrimary;
   static const Color textMuted = textTertiary;
@@ -78,19 +78,41 @@ class AppColors {
 }
 
 class AppTheme {
+  static TextTheme _scaleTextTheme(TextTheme base, {double scale = 1.1}) {
+    return base.copyWith(
+      displayLarge: base.displayLarge?.copyWith(fontSize: (base.displayLarge?.fontSize ?? 57) * scale),
+      displayMedium: base.displayMedium?.copyWith(fontSize: (base.displayMedium?.fontSize ?? 45) * scale),
+      displaySmall: base.displaySmall?.copyWith(fontSize: (base.displaySmall?.fontSize ?? 36) * scale),
+      headlineLarge: base.headlineLarge?.copyWith(fontSize: (base.headlineLarge?.fontSize ?? 32) * scale),
+      headlineMedium: base.headlineMedium?.copyWith(fontSize: (base.headlineMedium?.fontSize ?? 28) * scale),
+      headlineSmall: base.headlineSmall?.copyWith(fontSize: (base.headlineSmall?.fontSize ?? 24) * scale),
+      titleLarge: base.titleLarge?.copyWith(fontSize: (base.titleLarge?.fontSize ?? 22) * scale),
+      titleMedium: base.titleMedium?.copyWith(fontSize: (base.titleMedium?.fontSize ?? 16) * scale),
+      titleSmall: base.titleSmall?.copyWith(fontSize: (base.titleSmall?.fontSize ?? 14) * scale),
+      bodyLarge: base.bodyLarge?.copyWith(fontSize: (base.bodyLarge?.fontSize ?? 16) * scale),
+      bodyMedium: base.bodyMedium?.copyWith(fontSize: (base.bodyMedium?.fontSize ?? 14) * scale),
+      bodySmall: base.bodySmall?.copyWith(fontSize: (base.bodySmall?.fontSize ?? 12) * scale),
+      labelLarge: base.labelLarge?.copyWith(fontSize: (base.labelLarge?.fontSize ?? 14) * scale),
+      labelMedium: base.labelMedium?.copyWith(fontSize: (base.labelMedium?.fontSize ?? 12) * scale),
+      labelSmall: base.labelSmall?.copyWith(fontSize: (base.labelSmall?.fontSize ?? 11) * scale),
+    );
+  }
+
   static ThemeData get lightTheme {
     final baseTextTheme = GoogleFonts.interTextTheme(ThemeData.light().textTheme);
+    final scaledTextTheme = _scaleTextTheme(baseTextTheme);
     
     return ThemeData(
       useMaterial3: true,
+      fontFamily: GoogleFonts.inter().fontFamily,
       brightness: Brightness.light,
       colorScheme: AppColors.lightColorScheme,
       scaffoldBackgroundColor: AppColors.bgBody,
-      textTheme: baseTextTheme.copyWith(
-        titleLarge: baseTextTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        titleMedium: baseTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        bodyLarge: baseTextTheme.bodyLarge?.copyWith(color: AppColors.textDark),
-        bodyMedium: baseTextTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
+      textTheme: scaledTextTheme.copyWith(
+        titleLarge: scaledTextTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        titleMedium: scaledTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        bodyLarge: scaledTextTheme.bodyLarge?.copyWith(color: AppColors.textDark),
+        bodyMedium: scaledTextTheme.bodyMedium?.copyWith(color: AppColors.textMuted),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.primaryBlue,
@@ -98,7 +120,7 @@ class AppTheme {
         elevation: 2,
         centerTitle: true,
         titleTextStyle: GoogleFonts.inter(
-          fontSize: 18,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
@@ -120,7 +142,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          textStyle: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14),
+          textStyle: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15),
         ),
       ),
     );
@@ -128,17 +150,19 @@ class AppTheme {
 
   static ThemeData get darkTheme {
     final baseTextTheme = GoogleFonts.interTextTheme(ThemeData.dark().textTheme);
+    final scaledTextTheme = _scaleTextTheme(baseTextTheme);
 
     return ThemeData(
       useMaterial3: true,
+      fontFamily: GoogleFonts.inter().fontFamily,
       brightness: Brightness.dark,
       colorScheme: AppColors.darkColorScheme,
       scaffoldBackgroundColor: const Color(0xFF020617),
-      textTheme: baseTextTheme.copyWith(
-        titleLarge: baseTextTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-        titleMedium: baseTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-        bodyLarge: baseTextTheme.bodyLarge?.copyWith(color: const Color(0xFFF1F5F9)),
-        bodyMedium: baseTextTheme.bodyMedium?.copyWith(color: const Color(0xFF94A3B8)),
+      textTheme: scaledTextTheme.copyWith(
+        titleLarge: scaledTextTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        titleMedium: scaledTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+        bodyLarge: scaledTextTheme.bodyLarge?.copyWith(color: const Color(0xFFF1F5F9)),
+        bodyMedium: scaledTextTheme.bodyMedium?.copyWith(color: const Color(0xFF94A3B8)),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: const Color(0xFF1E293B),
@@ -146,7 +170,7 @@ class AppTheme {
         elevation: 2,
         centerTitle: true,
         titleTextStyle: GoogleFonts.inter(
-          fontSize: 18,
+          fontSize: 20,
           fontWeight: FontWeight.bold,
           color: const Color(0xFFF1F5F9),
         ),
@@ -168,7 +192,7 @@ class AppTheme {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
-          textStyle: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 14),
+          textStyle: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 15),
         ),
       ),
     );

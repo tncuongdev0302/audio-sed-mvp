@@ -5,21 +5,17 @@ import '../../domain/entities/recommendation_result.dart';
 
 class RecommendationPage extends StatelessWidget {
   final RecommendationResult result;
+  final List<Product> products;
 
   const RecommendationPage({
     super.key,
     required this.result,
+    required this.products,
   });
 
   @override
   Widget build(BuildContext context) {
-    final classification = result.classification;
 
-    // Load matched local products database
-    final suggestedProducts = Product.getSuggestedProducts(
-      classification.coughType,
-      classification.subject,
-    );
 
     return Scaffold(
       appBar: AppBar(
@@ -42,8 +38,8 @@ class RecommendationPage extends StatelessWidget {
               _buildRecommendationsList(context),
 
               // OTC Drugs & Products recommended section
-              if (suggestedProducts.isNotEmpty)
-                _buildProductsSection(context, suggestedProducts),
+              if (products.isNotEmpty)
+                _buildProductsSection(context, products),
 
               // Bottom note
               const Center(

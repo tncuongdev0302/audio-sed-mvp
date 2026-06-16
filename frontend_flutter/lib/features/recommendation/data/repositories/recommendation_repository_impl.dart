@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../../domain/entities/cough_assessment.dart';
 import '../../domain/entities/recommendation_result.dart';
+import '../../domain/entities/product.dart';
 import '../../domain/repositories/recommendation_repository.dart';
 import '../datasources/recommendation_remote_data_source.dart';
 
@@ -18,7 +19,7 @@ class RecommendationRepositoryImpl implements RecommendationRepository {
       final result = await remoteDataSource.getRecommendation(assessment);
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure('Lỗi tải khuyến nghị: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi tải khuyến nghị: ${cleanExceptionMessage(e)}'));
     }
   }
 
@@ -40,7 +41,24 @@ class RecommendationRepositoryImpl implements RecommendationRepository {
       );
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure('Lỗi tải khuyến nghị giấc ngủ: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi tải khuyến nghị giấc ngủ: ${cleanExceptionMessage(e)}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Product>>> getProducts({
+    required String category,
+    String? subject,
+  }) async {
+    try {
+      final result = await remoteDataSource.getProducts(
+        category: category,
+        subject: subject,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ServerFailure('Lỗi tải danh sách sản phẩm: ${cleanExceptionMessage(e)}'));
     }
   }
 }
+

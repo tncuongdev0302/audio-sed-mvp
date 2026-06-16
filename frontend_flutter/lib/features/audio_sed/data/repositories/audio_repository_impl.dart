@@ -15,7 +15,7 @@ class AudioRepositoryImpl implements AudioRepository {
       final samples = await remoteDataSource.getSamples();
       return Right(samples);
     } catch (e) {
-      return Left(ServerFailure('Không thể kết nối với máy chủ: ${e.toString()}'));
+      return Left(ServerFailure('Không thể kết nối với máy chủ: ${cleanExceptionMessage(e)}'));
     }
   }
 
@@ -25,7 +25,7 @@ class AudioRepositoryImpl implements AudioRepository {
       final path = await remoteDataSource.downloadSample(filename);
       return Right(path);
     } catch (e) {
-      return Left(ServerFailure('Không thể tải tệp mẫu: ${e.toString()}'));
+      return Left(ServerFailure('Không thể tải tệp mẫu: ${cleanExceptionMessage(e)}'));
     }
   }
 
@@ -41,8 +41,9 @@ class AudioRepositoryImpl implements AudioRepository {
       );
       return Right(result);
     } catch (e) {
-      return Left(ServerFailure('Lỗi phân tích âm thanh: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi phân tích âm thanh: ${cleanExceptionMessage(e)}'));
     }
   }
 }
+
 

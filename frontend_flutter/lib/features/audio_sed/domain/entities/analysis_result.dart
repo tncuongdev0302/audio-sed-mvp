@@ -18,12 +18,55 @@ class CoughTypeAnalysis extends Equatable {
   List<Object?> get props => [coughType, coughTypeVi, confidence, probabilities];
 }
 
+class SinusRisk extends Equatable {
+  final int percent;
+  final String level;
+  final String label;
+
+  const SinusRisk({
+    required this.percent,
+    required this.level,
+    required this.label,
+  });
+
+  @override
+  List<Object?> get props => [percent, level, label];
+}
+
+class Obstruction extends Equatable {
+  final String level;
+
+  const Obstruction({
+    required this.level,
+  });
+
+  @override
+  List<Object?> get props => [level];
+}
+
+class TreatmentItem extends Equatable {
+  final String text;
+  final String type;
+
+  const TreatmentItem({
+    required this.text,
+    required this.type,
+  });
+
+  @override
+  List<Object?> get props => [text, type];
+}
+
 class AnalysisResult extends Equatable {
   final List<SoundEvent> events;
   final bool hasCough;
   final double inferenceTimeMs;
   final double durationSec;
   final CoughTypeAnalysis? coughTypeAnalysis;
+  final SinusRisk? sinusRisk;
+  final Obstruction? obstruction;
+  final List<TreatmentItem>? treatmentChecklist;
+  final String? expertAdvice;
 
   const AnalysisResult({
     required this.events,
@@ -31,6 +74,10 @@ class AnalysisResult extends Equatable {
     required this.inferenceTimeMs,
     required this.durationSec,
     this.coughTypeAnalysis,
+    this.sinusRisk,
+    this.obstruction,
+    this.treatmentChecklist,
+    this.expertAdvice,
   });
 
   @override
@@ -40,5 +87,9 @@ class AnalysisResult extends Equatable {
         inferenceTimeMs,
         durationSec,
         coughTypeAnalysis,
+        sinusRisk,
+        obstruction,
+        treatmentChecklist,
+        expertAdvice,
       ];
 }

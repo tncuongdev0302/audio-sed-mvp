@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/cough_assessment.dart';
 import '../entities/recommendation_result.dart';
+import '../entities/product.dart';
 
 abstract class RecommendationRepository {
   Future<Either<Failure, RecommendationResult>> getRecommendation(
@@ -14,5 +15,10 @@ abstract class RecommendationRepository {
     required String apneaObserved,
     required String bodyType,
     required List<String> sleepSymptoms,
+  });
+
+  Future<Either<Failure, List<Product>>> getProducts({
+    required String category,
+    String? subject,
   });
 }

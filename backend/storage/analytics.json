@@ -476,5 +476,110 @@
       "coins_earned": 20
     },
     "timestamp": "2026-06-15T21:03:33.704219"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "5aff0b64-3aa2-4e75-ab25-08a131eed752",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-16T19:18:26.362889"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "b7f41091-cd5b-480b-9b5d-44c861273099",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-16T19:28:05.631883"
+  },
+  {
+    "event_type": "order_voucher_success",
+    "user_id": "b7f41091-cd5b-480b-9b5d-44c861273099",
+    "metadata": {
+      "product_name": "Voucher 50K Xịt Mũi Sinufresh",
+      "cost": 120
+    },
+    "timestamp": "2026-06-16T19:28:23.422268"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "1fe3e5ef-e4da-411c-9363-77d0a618267b",
+    "metadata": {
+      "symptoms_count": 10
+    },
+    "timestamp": "2026-06-16T19:28:53.806127"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "71f361b6-a2fc-426a-832e-cb43685b49cb",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-16T19:38:18.990549"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "145747ac-8ba8-4ffb-bb80-132ddd8254fb",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-16T19:38:31.490056"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "61d6e06a-4743-4eee-81ee-ad182b110578",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-16T19:51:23.007216"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "467bb9dc-9a7d-46e1-b1ed-dc006a9a929e",
+    "metadata": {
+      "symptoms_count": 9
+    },
+    "timestamp": "2026-06-16T19:53:56.789906"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "0be3bb13-ee48-4032-9b2a-467bba9a8b48",
+    "metadata": {
+      "symptoms_count": 13
+    },
+    "timestamp": "2026-06-16T19:57:16.785519"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "5d1c9a19-14fc-4b9a-a238-6011ef6f5f44",
+    "metadata": {
+      "symptoms_count": 2
+    },
+    "timestamp": "2026-06-16T20:01:33.832062"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "72757263-31ef-4467-bc07-3f023c5f0c2a",
+    "metadata": {
+      "symptoms_count": 2
+    },
+    "timestamp": "2026-06-16T20:41:51.509274"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "6b243f9b-4ddc-4cc4-93a7-b3d5893c9f8f",
+    "metadata": {
+      "symptoms_count": 2
+    },
+    "timestamp": "2026-06-16T20:57:22.118968"
+  },
+  {
+    "event_type": "onboarding_sync_success",
+    "user_id": "0e03d4ae-1885-4cf6-867f-4bf10cb14517",
+    "metadata": {
+      "symptoms_count": 2
+    },
+    "timestamp": "2026-06-16T20:58:41.720810"
   }
 ]

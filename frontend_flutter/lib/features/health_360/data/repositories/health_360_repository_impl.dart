@@ -29,7 +29,7 @@ class Health360RepositoryImpl implements Health360Repository {
       );
       return Right(userId);
     } catch (e) {
-      return Left(ServerFailure('Lỗi tạo hồ sơ lâm sàng: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi tạo hồ sơ lâm sàng: ${cleanExceptionMessage(e)}'));
     }
   }
 
@@ -39,25 +39,33 @@ class Health360RepositoryImpl implements Health360Repository {
       final data = await remoteDataSource.getContextWeather(userId);
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure('Lỗi lấy dữ liệu thời tiết: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi lấy dữ liệu thời tiết: ${cleanExceptionMessage(e)}'));
     }
   }
 
   @override
   Future<Either<Failure, Map<String, dynamic>>> scanFood({
     required String userId,
-    required String foodKey,
     required Uint8List imageBytes,
   }) async {
     try {
       final data = await remoteDataSource.scanFood(
         userId: userId,
-        foodKey: foodKey,
         imageBytes: imageBytes,
       );
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure('Lỗi phân tích thực phẩm: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi phân tích thực phẩm: ${cleanExceptionMessage(e)}'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Map<String, String>>>> getFoodOptions() async {
+    try {
+      final data = await remoteDataSource.getFoodOptions();
+      return Right(data);
+    } catch (e) {
+      return Left(ServerFailure('Lỗi tải danh sách món ăn: ${cleanExceptionMessage(e)}'));
     }
   }
 
@@ -80,7 +88,7 @@ class Health360RepositoryImpl implements Health360Repository {
       );
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure('Lỗi tạo đơn hàng đổi thưởng: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi tạo đơn hàng đổi thưởng: ${cleanExceptionMessage(e)}'));
     }
   }
 
@@ -98,7 +106,7 @@ class Health360RepositoryImpl implements Health360Repository {
       );
       return const Right(null);
     } catch (e) {
-      return Left(ServerFailure('Lỗi ghi nhận sự kiện: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi ghi nhận sự kiện: ${cleanExceptionMessage(e)}'));
     }
   }
 
@@ -108,7 +116,8 @@ class Health360RepositoryImpl implements Health360Repository {
       final data = await remoteDataSource.getWeeklySummary(userId);
       return Right(data);
     } catch (e) {
-      return Left(ServerFailure('Lỗi lấy tổng kết tuần: ${e.toString()}'));
+      return Left(ServerFailure('Lỗi lấy tổng kết tuần: ${cleanExceptionMessage(e)}'));
     }
   }
 }
+

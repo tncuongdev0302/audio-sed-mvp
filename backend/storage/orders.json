@@ -70,5 +70,17 @@
     "delivery_long": 106.7427498,
     "status": "confirmed",
     "created_at": "2026-06-15T21:01:28.802289"
+  },
+  {
+    "order_id": "5e6a1d59",
+    "user_id": "b7f41091-cd5b-480b-9b5d-44c861273099",
+    "product_id": "voucher_sinufresh_50k",
+    "product_name": "Voucher 50K Xịt Mũi Sinufresh",
+    "quantity": 1,
+    "source_alert_id": null,
+    "delivery_lat": 10.78,
+    "delivery_long": 106.7,
+    "status": "confirmed",
+    "created_at": "2026-06-16T19:28:23.399422"
   }
 ]

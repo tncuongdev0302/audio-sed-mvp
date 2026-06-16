@@ -17,9 +17,10 @@ abstract class Health360RemoteDataSource {
 
   Future<Map<String, dynamic>> scanFood({
     required String userId,
-    required String foodKey,
     required Uint8List imageBytes,
   });
+
+  Future<List<Map<String, String>>> getFoodOptions();
 
   Future<Map<String, dynamic>> createOrder({
     required String userId,
@@ -58,7 +59,7 @@ class Health360RemoteDataSourceImpl implements Health360RemoteDataSource {
         'name': name,
         'disease_tags': diseaseTags,
         'symptoms': symptoms,
-        'vitals': {'temp': 36.6, 'spo2': 98},
+        'vitals': {},
         'lat': lat,
         'long': long,
         'device_token': deviceToken,
@@ -85,13 +86,12 @@ class Health360RemoteDataSourceImpl implements Health360RemoteDataSource {
   @override
   Future<Map<String, dynamic>> scanFood({
     required String userId,
-    required String foodKey,
     required Uint8List imageBytes,
   }) async {
     final formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(
         imageBytes,
-        filename: '$foodKey.png',
+        filename: 'food_scan.png',
         contentType: MediaType('image', 'png'),
       ),
     });
@@ -158,6 +158,23 @@ class Health360RemoteDataSourceImpl implements Health360RemoteDataSource {
       return response.data as Map<String, dynamic>;
     } else {
       throw Exception('Lỗi lấy tổng kết tuần');
+    }
+  }
+
+  @override
+  Future<List<Map<String, String>>> getFoodOptions() async {
+    final response = await client.get('/api/v1/food/options');
+    if (response.statusCode == 200) {
+      final List<dynamic> optionsJson = response.data['options'];
+      return optionsJson.map((json) {
+        final map = json as Map<String, dynamic>;
+        return {
+          'key': map['key'].toString(),
+          'name': map['name'].toString(),
+        };
+      }).toList();
+    } else {
+      throw Exception('Lỗi lấy danh sách món ăn');
     }
   }
 }

@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../di/injection_container.dart';
 import '../../features/audio_sed/domain/entities/analysis_result.dart';
 import '../../features/recommendation/domain/entities/recommendation_result.dart';
+import '../../features/recommendation/domain/entities/product.dart';
 import '../../features/recommendation/presentation/cubit/recommendation_cubit.dart';
-import '../../features/audio_sed/presentation/pages/audio_sed_page.dart';
-import '../../features/audio_sed/presentation/pages/food_checker_detail_page.dart';
 import '../../features/audio_sed/presentation/pages/audio_analysis_detail_page.dart';
-import '../../features/audio_sed/presentation/pages/weekly_summary_page.dart';
+import '../../features/missions/presentation/pages/weekly_summary_page.dart'; // TODO: Update history/missions later
+import '../../features/main_navigation/presentation/pages/main_layout_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_quiz_page.dart';
+import '../../features/food_checker/presentation/pages/food_checker_detail_page.dart';
 import '../../features/recommendation/presentation/pages/assessment_page.dart';
 import '../../features/recommendation/presentation/pages/recommendation_page.dart';
 import '../../features/recommendation/presentation/pages/sleep_assessment_page.dart';
@@ -19,7 +21,7 @@ class AppRouter {
 
   static final GoRouter router = GoRouter(
     navigatorKey: rootNavigatorKey,
-    initialLocation: '/',
+    initialLocation: '/onboarding',
     errorBuilder: (context, state) => const Scaffold(
       body: Center(
         child: Text('Đường dẫn không tồn tại!'),
@@ -28,7 +30,11 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
-        builder: (context, state) => const AudioSedPage(),
+        builder: (context, state) => const MainLayoutPage(),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) => const OnboardingQuizPage(),
       ),
       GoRoute(
         path: '/food-checker',
@@ -55,8 +61,10 @@ class AppRouter {
       GoRoute(
         path: '/recommendation',
         builder: (context, state) {
-          final recommendationResult = state.extra as RecommendationResult;
-          return RecommendationPage(result: recommendationResult);
+          final args = state.extra as Map<String, dynamic>;
+          final recommendationResult = args['result'] as RecommendationResult;
+          final products = args['products'] as List<Product>;
+          return RecommendationPage(result: recommendationResult, products: products);
         },
       ),
       GoRoute(

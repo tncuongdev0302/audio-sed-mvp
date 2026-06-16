@@ -49,7 +49,10 @@ class _AssessmentPageState extends State<AssessmentPage> {
       body: BlocConsumer<RecommendationCubit, RecommendationState>(
         listener: (context, state) {
           if (state is RecommendationSuccess) {
-            context.pushReplacement('/recommendation', extra: state.result);
+            context.pushReplacement('/recommendation', extra: {
+              'result': state.result,
+              'products': state.products,
+            });
           } else if (state is RecommendationError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

@@ -52,7 +52,7 @@ class DashboardProfileRow extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Thành viên Vàng | $coins Lxu',
+                  'Thành viên Vàng | $coins Fsell',
                   style: const TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,

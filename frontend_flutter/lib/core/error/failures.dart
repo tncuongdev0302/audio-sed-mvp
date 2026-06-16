@@ -29,3 +29,23 @@ class PermissionFailure extends Failure {
 class UnknownFailure extends Failure {
   const UnknownFailure(super.message, [super.error]);
 }
+
+class ServerException implements Exception {
+  final String message;
+  const ServerException(this.message);
+
+  @override
+  String toString() => message;
+}
+
+String cleanExceptionMessage(dynamic e) {
+  if (e is ServerException) {
+    return e.message;
+  }
+  final str = e.toString();
+  if (str.startsWith('Exception: ')) {
+    return str.substring(11);
+  }
+  return str;
+}
+

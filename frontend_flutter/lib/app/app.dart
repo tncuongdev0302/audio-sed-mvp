@@ -19,6 +19,15 @@ class MyApp extends StatelessWidget {
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: themeMode == ThemeModeType.light ? ThemeMode.light : ThemeMode.dark,
+          builder: (context, child) {
+            final mediaQueryData = MediaQuery.of(context);
+            return MediaQuery(
+              data: mediaQueryData.copyWith(
+                textScaler: const TextScaler.linear(1.12),
+              ),
+              child: child!,
+            );
+          },
         );
       },
     );

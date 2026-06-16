@@ -16,9 +16,10 @@ abstract class Health360Repository {
 
   Future<Either<Failure, Map<String, dynamic>>> scanFood({
     required String userId,
-    required String foodKey,
     required Uint8List imageBytes,
   });
+
+  Future<Either<Failure, List<Map<String, String>>>> getFoodOptions();
 
   Future<Either<Failure, Map<String, dynamic>>> redeemVoucher({
     required String userId,

@@ -21,44 +21,50 @@ class _SleepAssessmentPageState extends State<SleepAssessmentPage> {
   String _bodyType = 'normal';
   final List<String> _sleepSymptoms = [];
 
-  // Mock sleep products for visual flair
-  final List<Product> _sleepProducts = const [
-    Product(
-      name: 'Kẹo dẻo hỗ trợ giấc ngủ Melatonin Gummies 5mg',
-      brand: 'Natrol (Mỹ)',
-      price: '320.000đ',
-      unit: 'Hộp 90 viên',
-      iconType: ProductIconType.pill,
-      desc: 'Bổ sung Melatonin tự nhiên giúp dễ ngủ, ngủ sâu giấc',
-      tag: 'Bán chạy nhất',
-    ),
-    Product(
-      name: 'Gối chống ngáy thông minh định hình cao cấp',
-      brand: 'Liên Á (Việt Nam)',
-      price: '450.000đ',
-      unit: 'Cái',
-      iconType: ProductIconType.droplet, // represented as support device
-      desc: 'Thiết kế nâng đỡ cổ góc 15-30 độ, thông thoáng đường thở',
-      tag: 'Lời khuyên bác sĩ',
-    ),
-    Product(
-      name: 'Miếng dán cánh mũi hỗ trợ thở giảm ngáy',
-      brand: 'Breathe Right (Mỹ)',
-      price: '185.000đ',
-      unit: 'Hộp 30 miếng',
-      iconType: ProductIconType.spray,
-      desc: 'Mở rộng đường thở cơ học, giảm nghẹt mũi, giảm ngáy',
-      tag: 'Nhập khẩu Mỹ',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('KHẢO SÁT GIẤC NGỦ'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: isDark
+                ? const LinearGradient(
+                    colors: [Color(0xFF0F172A), Color(0xFF1E1B4B)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  )
+                : const LinearGradient(
+                    colors: [Color(0xFF1ABCFE), Color(0xFF0284C7)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+          ),
+        ),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'KHẢO SÁT GIẤC NGỦ',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+          ),
+        ),
+        centerTitle: true,
       ),
-      body: BlocBuilder<RecommendationCubit, RecommendationState>(
+      body: BlocConsumer<RecommendationCubit, RecommendationState>(
+        listener: (context, state) {
+          if (state is RecommendationError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: theme.colorScheme.error,
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           if (state is RecommendationLoading) {
             return const Center(
@@ -67,7 +73,7 @@ class _SleepAssessmentPageState extends State<SleepAssessmentPage> {
           }
 
           if (state is RecommendationSleepSuccess) {
-            return _buildResultReport(context, state.sleepData);
+            return _buildResultReport(context, state.sleepData, state.products);
           }
 
           // Render the intake form
@@ -406,7 +412,7 @@ class _SleepAssessmentPageState extends State<SleepAssessmentPage> {
         );
   }
 
-  Widget _buildResultReport(BuildContext context, Map<String, dynamic> data) {
+  Widget _buildResultReport(BuildContext context, Map<String, dynamic> data, List<Product> products) {
     final theme = Theme.of(context);
     final classification = data['classification'] as Map<String, dynamic>;
     final riskInfo = classification['osa_risk'] as Map<String, dynamic>;
@@ -606,7 +612,8 @@ class _SleepAssessmentPageState extends State<SleepAssessmentPage> {
             ),
 
             // Products section
-            _buildSleepProductsSection(context),
+            if (products.isNotEmpty)
+              _buildSleepProductsSection(context, products),
 
             // Reset Button
             SizedBox(
@@ -625,7 +632,7 @@ class _SleepAssessmentPageState extends State<SleepAssessmentPage> {
     );
   }
 
-  Widget _buildSleepProductsSection(BuildContext context) {
+  Widget _buildSleepProductsSection(BuildContext context, List<Product> products) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     return Column(
@@ -647,7 +654,7 @@ class _SleepAssessmentPageState extends State<SleepAssessmentPage> {
         ),
         Column(
           spacing: 12,
-          children: _sleepProducts.map((p) {
+          children: products.map((p) {
             final isDark = theme.brightness == Brightness.dark;
             return Container(
               padding: const EdgeInsets.all(12),

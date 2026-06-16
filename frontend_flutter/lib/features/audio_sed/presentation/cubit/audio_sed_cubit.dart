@@ -11,6 +11,8 @@ class AudioSedCubit extends Cubit<AudioSedState> {
   final AnalyzeAudio _analyzeAudio;
 
   final _audioRecorder = AudioRecorder();
+  AudioRecorder get audioRecorder => _audioRecorder;
+  final mode = 'v2';
   Timer? _recordingTimer;
   int _elapsedSeconds = 0;
   String? _recordingPath;
@@ -20,7 +22,7 @@ class AudioSedCubit extends Cubit<AudioSedState> {
   })  : _analyzeAudio = analyzeAudio,
         super(const AudioSedInitial());
 
-  Future<void> startRecording(String mode) async {
+  Future<void> startRecording() async {
     try {
       final status = await Permission.microphone.request();
       if (!status.isGranted) {
@@ -31,7 +33,8 @@ class AudioSedCubit extends Cubit<AudioSedState> {
       }
 
       final tempDir = await getTemporaryDirectory();
-      _recordingPath = '${tempDir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
+      _recordingPath =
+          '${tempDir.path}/recording_${DateTime.now().millisecondsSinceEpoch}.wav';
 
       await _audioRecorder.start(
         const RecordConfig(
@@ -46,11 +49,12 @@ class AudioSedCubit extends Cubit<AudioSedState> {
       emit(AudioSedRecording(_elapsedSeconds));
 
       _recordingTimer?.cancel();
-      _recordingTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      _recordingTimer =
+          Timer.periodic(const Duration(seconds: 1), (timer) async {
         _elapsedSeconds++;
         if (_elapsedSeconds >= 5) {
           timer.cancel();
-          await stopRecordingAndAnalyze(mode);
+          await stopRecordingAndAnalyze();
         } else {
           emit(AudioSedRecording(_elapsedSeconds));
         }
@@ -60,13 +64,13 @@ class AudioSedCubit extends Cubit<AudioSedState> {
     }
   }
 
-  Future<void> stopRecordingAndAnalyze(String mode) async {
+  Future<void> stopRecordingAndAnalyze() async {
     _recordingTimer?.cancel();
     try {
       final path = await _audioRecorder.stop();
       if (path != null) {
         emit(const AudioSedAnalyzing());
-        
+
         final result = await _analyzeAudio(
           AnalyzeAudioParams(filePath: path, mode: mode),
         );
@@ -84,6 +88,27 @@ class AudioSedCubit extends Cubit<AudioSedState> {
       }
     } catch (e) {
       emit(AudioSedError('Lỗi khi dừng thu âm và phân tích: $e'));
+    }
+  }
+
+  Future<void> analyzeAudioPath(String path) async {
+    try {
+      emit(const AudioSedAnalyzing());
+
+      final result = await _analyzeAudio(
+        AnalyzeAudioParams(filePath: path, mode: mode),
+      );
+
+      result.fold(
+        (failure) => emit(AudioSedError(failure.message)),
+        (analysisResult) => emit(AudioSedAnalysisSuccess(
+          result: analysisResult,
+          mode: mode,
+          recordingPath: path,
+        )),
+      );
+    } catch (e) {
+      emit(AudioSedError('Lỗi khi phân tích âm thanh: $e'));
     }
   }
 

@@ -15,13 +15,13 @@ import '../../features/audio_sed/presentation/cubit/audio_sed_cubit.dart';
 import '../../features/health_360/data/datasources/health_360_remote_data_source.dart';
 import '../../features/health_360/data/repositories/health_360_repository_impl.dart';
 import '../../features/health_360/domain/repositories/health_360_repository.dart';
-import '../../features/health_360/domain/usecases/submit_user_intake.dart';
-import '../../features/health_360/domain/usecases/get_context_weather.dart';
-import '../../features/health_360/domain/usecases/scan_food.dart';
-import '../../features/health_360/domain/usecases/redeem_voucher.dart';
-import '../../features/health_360/domain/usecases/track_event.dart';
-import '../../features/health_360/domain/usecases/get_weekly_summary.dart';
-import '../../features/health_360/presentation/cubit/health_360_cubit.dart';
+import '../../features/onboarding/domain/usecases/submit_user_intake.dart';
+import '../../features/home/domain/usecases/get_context_weather.dart';
+import '../../features/food_checker/domain/usecases/scan_food.dart';
+import '../../features/missions/domain/usecases/redeem_voucher.dart';
+import '../../core/analytics/domain/usecases/track_event.dart';
+import '../../features/missions/domain/usecases/get_weekly_summary.dart';
+import '../../core/user_session/presentation/cubit/user_session_cubit.dart';
 
 // Recommendation Feature
 import '../../features/recommendation/data/datasources/recommendation_remote_data_source.dart';
@@ -29,6 +29,7 @@ import '../../features/recommendation/data/repositories/recommendation_repositor
 import '../../features/recommendation/domain/repositories/recommendation_repository.dart';
 import '../../features/recommendation/domain/usecases/get_recommendation.dart';
 import '../../features/recommendation/domain/usecases/get_sleep_recommendation.dart';
+import '../../features/recommendation/domain/usecases/get_products.dart';
 import '../../features/recommendation/presentation/cubit/recommendation_cubit.dart';
 
 final sl = GetIt.instance;
@@ -81,16 +82,18 @@ Future<void> initDI() async {
   sl.registerLazySingleton(() => RedeemVoucher(repository: sl()));
   sl.registerLazySingleton(() => TrackEvent(repository: sl()));
   sl.registerLazySingleton(() => GetWeeklySummary(repository: sl()));
+  sl.registerLazySingleton(() => GetFoodOptions(repository: sl()));
 
   // Cubits
   sl.registerFactory(
-    () => Health360Cubit(
+    () => UserSessionCubit(
       submitUserIntake: sl(),
       getContextWeather: sl(),
       scanFood: sl(),
       redeemVoucher: sl(),
       trackEvent: sl(),
       getWeeklySummary: sl(),
+      getFoodOptions: sl(),
     ),
   );
 
@@ -108,12 +111,14 @@ Future<void> initDI() async {
   // Use cases
   sl.registerLazySingleton(() => GetRecommendation(repository: sl()));
   sl.registerLazySingleton(() => GetSleepRecommendation(repository: sl()));
+  sl.registerLazySingleton(() => GetProducts(repository: sl()));
 
   // Cubits
   sl.registerFactory(
     () => RecommendationCubit(
       getRecommendation: sl(),
       getSleepRecommendation: sl(),
+      getProducts: sl(),
     ),
   );
 }

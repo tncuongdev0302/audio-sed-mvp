@@ -273,5 +273,294 @@
       "spo2": 98
     },
     "created_at": "2026-06-15T14:02:31.230944"
+  },
+  "5aff0b64-3aa2-4e75-ab25-08a131eed752": {
+    "id": "5aff0b64-3aa2-4e75-ab25-08a131eed752",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.907945,
+    "long": 106.7427136,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:18:26.226397"
+  },
+  "b7f41091-cd5b-480b-9b5d-44c861273099": {
+    "id": "b7f41091-cd5b-480b-9b5d-44c861273099",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079532,
+    "long": 106.7427279,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:28:05.535107"
+  },
+  "1fe3e5ef-e4da-411c-9363-77d0a618267b": {
+    "id": "1fe3e5ef-e4da-411c-9363-77d0a618267b",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079945,
+    "long": 106.7427061,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_4",
+      "suc_khoe_4",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "doi_tuong_6",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:28:53.699681"
+  },
+  "71f361b6-a2fc-426a-832e-cb43685b49cb": {
+    "id": "71f361b6-a2fc-426a-832e-cb43685b49cb",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079351,
+    "long": 106.7426592,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:38:18.873075"
+  },
+  "145747ac-8ba8-4ffb-bb80-132ddd8254fb": {
+    "id": "145747ac-8ba8-4ffb-bb80-132ddd8254fb",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.78,
+    "long": 106.7,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:38:31.384612"
+  },
+  "61d6e06a-4743-4eee-81ee-ad182b110578": {
+    "id": "61d6e06a-4743-4eee-81ee-ad182b110578",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.78,
+    "long": 106.7,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:51:22.879643"
+  },
+  "467bb9dc-9a7d-46e1-b1ed-dc006a9a929e": {
+    "id": "467bb9dc-9a7d-46e1-b1ed-dc006a9a929e",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079499,
+    "long": 106.7426998,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_1",
+      "suc_khoe_2",
+      "doi_tuong_2",
+      "doi_tuong_4",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_4",
+      "muc_tieu_suc_khoe_1",
+      "muc_tieu_suc_khoe_2"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:53:56.693817"
+  },
+  "0be3bb13-ee48-4032-9b2a-467bba9a8b48": {
+    "id": "0be3bb13-ee48-4032-9b2a-467bba9a8b48",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079427,
+    "long": 106.7427048,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_5",
+      "suc_khoe_5",
+      "doi_tuong_7",
+      "canh_bao_1",
+      "canh_bao_2",
+      "canh_bao_3",
+      "canh_bao_4",
+      "canh_bao_5",
+      "canh_bao_6",
+      "canh_bao_7",
+      "canh_bao_8",
+      "canh_bao_9",
+      "muc_tieu_suc_khoe_1"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T12:57:16.693673"
+  },
+  "5d1c9a19-14fc-4b9a-a238-6011ef6f5f44": {
+    "id": "5d1c9a19-14fc-4b9a-a238-6011ef6f5f44",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079539,
+    "long": 106.7426971,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_5",
+      "suc_khoe_5"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T13:01:33.738934"
+  },
+  "72757263-31ef-4467-bc07-3f023c5f0c2a": {
+    "id": "72757263-31ef-4467-bc07-3f023c5f0c2a",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.907995,
+    "long": 106.7427491,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_5",
+      "suc_khoe_5"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T13:41:51.403720"
+  },
+  "6b243f9b-4ddc-4cc4-93a7-b3d5893c9f8f": {
+    "id": "6b243f9b-4ddc-4cc4-93a7-b3d5893c9f8f",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9079422,
+    "long": 106.7427242,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_5",
+      "suc_khoe_5"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T13:57:22.014094"
+  },
+  "0e03d4ae-1885-4cf6-867f-4bf10cb14517": {
+    "id": "0e03d4ae-1885-4cf6-867f-4bf10cb14517",
+    "name": "Minh Tuấn",
+    "device_token": "fcm_token_health360",
+    "lat": 10.9078885,
+    "long": 106.7426685,
+    "disease_tags": [
+      "ENT"
+    ],
+    "symptoms": [
+      "muc_tieu_5",
+      "suc_khoe_5"
+    ],
+    "vitals": {
+      "temp": 36.6,
+      "spo2": 98
+    },
+    "created_at": "2026-06-16T13:58:41.631486"
   }
 }
