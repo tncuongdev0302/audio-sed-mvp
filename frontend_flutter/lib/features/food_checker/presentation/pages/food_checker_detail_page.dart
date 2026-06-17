@@ -475,6 +475,59 @@ class _FoodCheckerDetailPageState extends State<FoodCheckerDetailPage> {
 
     // Parse detected foods
     final List<dynamic> foods = response['foods'] ?? [];
+
+    if (foods.isEmpty) {
+      final String message = response['message_vi'] ??
+          'Không tìm thấy thông tin thức ăn trên ảnh. Bạn cần kiểm tra lại đã đưa đúng camera vào món ăn chưa.';
+      return Card(
+        elevation: 0,
+        color: isDark ? AppColors.darkColorScheme.surface : AppColors.bgSurface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(
+            color: isDark
+                ? AppColors.darkColorScheme.outline
+                : AppColors.borderColor,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.info_outline,
+                    color: AppColors.warningColor,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Không tìm thấy',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : AppColors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                message,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: isDark ? Colors.grey.shade400 : AppColors.textSecondary,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final List<String> foodNames =
         foods.map((f) => (f['name_vi'] ?? f['name'] ?? '').toString()).toList();
     final String foodName =

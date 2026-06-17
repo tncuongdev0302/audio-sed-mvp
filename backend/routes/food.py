@@ -52,6 +52,16 @@ async def food_scan(file: UploadFile, user_id: Optional[str] = Form(None), food_
     if not image_bytes:
         raise HTTPException(400, "Empty file")
 
+    # Save received image for debugging
+    try:
+        import os
+        os.makedirs("storage", exist_ok=True)
+        with open("storage/debug_received_image.jpg", "wb") as f_debug:
+            f_debug.write(image_bytes)
+        print(f"[DEBUG] Saved uploaded food image of size {len(image_bytes)} bytes to storage/debug_received_image.jpg")
+    except Exception as e:
+        print(f"[DEBUG] Failed to save uploaded food image: {e}")
+
     start = time.time()
     foods = detect(image_bytes)
     inference_time_ms = (time.time() - start) * 1000

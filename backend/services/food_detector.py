@@ -10,7 +10,7 @@ import random
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 from models.food_classes import FOOD_CLASSES
 
@@ -109,6 +109,7 @@ def detect(image_bytes: bytes, confidence: float = 0.75) -> list[dict]:
     # Real inference
     start = time.time()
     img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+    img = ImageOps.exif_transpose(img)
     img_w, img_h = img.size
     results = _model.predict(source=img, conf=confidence, imgsz=640, device="cpu", verbose=False)
 

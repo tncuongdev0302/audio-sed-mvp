@@ -88,11 +88,26 @@ class Health360RemoteDataSourceImpl implements Health360RemoteDataSource {
     required String userId,
     required Uint8List imageBytes,
   }) async {
+    String subtype = 'png';
+    if (imageBytes.length > 3 &&
+        imageBytes[0] == 0xFF &&
+        imageBytes[1] == 0xD8 &&
+        imageBytes[2] == 0xFF) {
+      subtype = 'jpeg';
+    }
+
+    print('=== [DEBUG UPLOAD IMAGE] ===');
+    print('Kích thước ảnh gửi đi: ${imageBytes.length} bytes');
+    print('Định dạng xác định: $subtype');
+    print('Tên tệp tin gửi lên: food_scan.${subtype == 'jpeg' ? 'jpg' : 'png'}');
+    print('MediaType: image/$subtype');
+    print('============================');
+
     final formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(
         imageBytes,
-        filename: 'food_scan.png',
-        contentType: MediaType('image', 'png'),
+        filename: 'food_scan.${subtype == 'jpeg' ? 'jpg' : 'png'}',
+        contentType: MediaType('image', subtype),
       ),
     });
 

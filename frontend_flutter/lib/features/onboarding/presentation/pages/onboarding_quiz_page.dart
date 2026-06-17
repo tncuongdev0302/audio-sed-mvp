@@ -111,7 +111,7 @@ class _OnboardingQuizPageState extends State<OnboardingQuizPage> {
             foregroundColor: Colors.white,
             elevation: 0,
             title: const Text(
-              'KHẢO SÁT SỨC KHỎE AICARE',
+              'KHẢO SÁT SỨC KHỎE',
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
